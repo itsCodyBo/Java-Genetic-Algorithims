@@ -1,0 +1,23 @@
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\General_Graphics\VB\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.vbprojResolveAssemblyReference.cache
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\General_Graphics\VB\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.Form1.resources
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\General_Graphics\VB\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.Resources.resources
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\General_Graphics\VB\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.vbproj.GenerateResource.Cache
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\General_Graphics\VB\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.vbproj.CoreCompileInputs.cache
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\General_Graphics\VB\WindowsApp1\WindowsApp1\bin\Debug\WindowsApp1.exe.config
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\General_Graphics\VB\WindowsApp1\WindowsApp1\bin\Debug\WindowsApp1.exe
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\General_Graphics\VB\WindowsApp1\WindowsApp1\bin\Debug\WindowsApp1.pdb
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\General_Graphics\VB\WindowsApp1\WindowsApp1\bin\Debug\WindowsApp1.xml
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\General_Graphics\VB\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.exe
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\General_Graphics\VB\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.xml
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\General_Graphics\VB\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.pdb
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\Lectures\2_Chapter 02_From Geometry to Pixel\Addition_Infomation\Simple_graphics_programming_templates\VB\WindowsApp1\WindowsApp1\bin\Debug\WindowsApp1.exe.config
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\Lectures\2_Chapter 02_From Geometry to Pixel\Addition_Infomation\Simple_graphics_programming_templates\VB\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.exe
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\Lectures\2_Chapter 02_From Geometry to Pixel\Addition_Infomation\Simple_graphics_programming_templates\VB\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.xml
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\Lectures\2_Chapter 02_From Geometry to Pixel\Addition_Infomation\Simple_graphics_programming_templates\VB\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.pdb
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\Lectures\2_Chapter 02_From Geometry to Pixel\Addition_Infomation\Simple_graphics_programming_templates\VB\WindowsApp1\WindowsApp1\bin\Debug\WindowsApp1.exe
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\Lectures\2_Chapter 02_From Geometry to Pixel\Addition_Infomation\Simple_graphics_programming_templates\VB\WindowsApp1\WindowsApp1\bin\Debug\WindowsApp1.pdb
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\Lectures\2_Chapter 02_From Geometry to Pixel\Addition_Infomation\Simple_graphics_programming_templates\VB\WindowsApp1\WindowsApp1\bin\Debug\WindowsApp1.xml
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\Lectures\2_Chapter 02_From Geometry to Pixel\Addition_Infomation\Simple_graphics_programming_templates\VB\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.vbprojResolveAssemblyReference.cache
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\Lectures\2_Chapter 02_From Geometry to Pixel\Addition_Infomation\Simple_graphics_programming_templates\VB\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.Form1.resources
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\Lectures\2_Chapter 02_From Geometry to Pixel\Addition_Infomation\Simple_graphics_programming_templates\VB\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.Resources.resources
+E:\UNO_Courses\CSCI_4631_5631_ComputerGraphics\Lectures\2_Chapter 02_From Geometry to Pixel\Addition_Infomation\Simple_graphics_programming_templates\VB\WindowsApp1\WindowsApp1\obj\Debug\WindowsApp1.vbproj.GenerateResource.Cache

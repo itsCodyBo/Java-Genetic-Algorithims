@@ -1,0 +1,223 @@
+#include <stdio.h>
+#include <conio.h>
+#include <alloc.h>
+/* #include <malloc.h>  */
+#include <stdlib.h>
+#include <math.h>
+#include <dos.h>
+#include <ctype.h>
+#include <string.h>
+/* -------------------------<  Define
+*/
+# define FALSE 0
+# define TRUE 1
+
+# define A 10.0
+
+/* **************************************************************** */
+char  fname[30],  tempfname[30];
+char tempchar[40];
+int hold_i;
+long double loop=0;
+int count, temp1, temp2, station;
+
+double delayy , simuclock, idletime, idle, throughput;
+
+float insertok,B,quantum;;
+
+unsigned long int queue, data_no;
+
+FILE *f, *tf;
+
+/* -----------------> declearing the station status structure below
+*/
+struct station{
+
+	float timea;
+	float timeb;
+	int RCA;
+	int CDA;
+	int RCB;
+	int CDB;
+};
+
+struct station ST[200];
+
+/* -----------------> declearing the cell structure below
+*/
+
+struct cell{
+	int station_no;
+	float time_of_next_stat;
+	int type;           /* 0=free 1=request 2=data  */
+};
+struct cell cella[100], cellb[100];
+
+/* **************************************************************** */
+
+void initialize(){
+
+	float p,q;
+	int sno, cellcount,i, j, size;
+
+	sno=1;
+	cellcount=1;
+
+	i=1;
+
+	tf=fopen("initiali.ze","w");
+
+	cella[i].station_no=sno;
+	cella[i].time_of_next_stat=0;
+	cella[i].type=0;
+
+	fprintf(tf,"%f      %d \n",cella[i].time_of_next_stat,cella[i].station_no);
+
+	q=A;
+	p=A;
+
+	do{
+		cellcount++;
+
+		i++;
+
+		q=q+A;
+		while (p<q){ 		p=p+B; 	sno=sno+1; }
+
+		cella[i].station_no=sno;
+		if ((p-q)==0)
+			cella[i].time_of_next_stat=0;
+		else
+			cella[i].time_of_next_stat=p-q;
+
+		fprintf(tf,"%f      %d \n",cella[i].time_of_next_stat,cella[i].station_no);
+		cella[i].type=0;
+
+
+	} while (sno<=station);
+
+	hold_i= 80; /* this will remember,
+							from where a new cell should be inserted in cellb.
+					 */
+
+	cella[i+1].station_no=NULL;
+	cella[i+1].time_of_next_stat=NULL;
+	cella[i+1].type=NULL;
+
+	cellb[0].station_no=0;
+	cellb[0].time_of_next_stat=0;
+	cellb[0].type=0;
+
+
+	fprintf(tf,"\n\n\n\n\n\n");
+
+	j=1;
+
+ do{
+
+	cellb[i].station_no=(station+1)-(cella[j].station_no);
+	cellb[i].time_of_next_stat=cella[j].time_of_next_stat;
+	cellb[i].type=0;
+
+		fprintf(tf,"%f      %d \n",cellb[i].time_of_next_stat,cellb[i].station_no);
+	i--; j++;
+
+	} while (i!=0);
+
+	fclose(tf);
+
+}
+
+/* **************************************************************** */
+
+int retmin(){
+ int i=1;
+    quantum=cella[i].time_of_next_stat;
+do{
+
+		if ( (cella[i].time_of_next_stat)<quantum )
+														quantum=cella[i].time_of_next_stat;
+		i++;
+	} while ((cella[i].station_no!=NULL) && (i<=station));
+
+return i;
+}
+
+/* **************************************************************** */
+
+	float stationdist(int n){
+
+	float a;
+	a=(800*1.0)/(n+1);
+	return(a);
+
+}
+
+/* ******************************************************************* */
+
+void ini_st_status(){
+
+	int i;
+
+	for (i=0;i<200;i++){
+
+		ST[i].timea=0;
+		ST[i].timeb=0;
+		ST[i].RCA=0;
+		ST[i].CDA=0;
+		ST[i].RCB=0;
+		ST[i].CDB=0;
+
+	}
+
+}
+
+
+/* **************************************************************** */
+
+main(){
+	int i,j,Flag;
+
+	clrscr();
+
+
+	randomize();
+	printf("Enter station number  ");
+	scanf("%d",&station);
+	B=stationdist(station);
+
+	initialize();
+	ini_st_status();
+
+	data_no=0; 	simuclock=0;	 	delayy=0; 	idle=0; 	idletime=0;
+
+	insertok=0;
+
+	do{
+
+		i=retmin();
+
+/* for safe only */  if ((insertok>A)||(insertok<0)) insertok=A;
+
+			if (insertok<quantum) 		quantum=insertok;
+		simuclock=simuclock+quantum;
+
+		insertok=insertok-quantum;
+		if (insertok<=0){
+			insertok=A;
+			for(j=i;j>1;j--)
+				{ 	cella[j].station_no= cella[j-1].station_no;
+						cella[j].time_of_next_stat=cella[j-1].time_of_next_stat;
+						cella[j].type=cella[j-1].type;
+				}
+
+			j=1;
+
+			cella[j].station_no=1;
+			cella[j].time_of_next_stat=0;
+			cella[j].type=0;
+
+			for(j=1;j<=hold_i;j++)
+			{
+				cellb[j-1].station_no =cellb[j].station_no;
+				cellb[j-1].time_of_next_stat=cellb[j].time_of

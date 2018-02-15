@@ -1,0 +1,2 @@
+Seq = hphpphhphpphphhpphph
+Fitness = -9

@@ -1,0 +1,2292 @@
+/*	alloc.h
+
+	memory management functions and variables.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#ifndef _STDDEF
+#define _STDDEF
+#ifndef _PTRDIFF_T
+#define _PTRDIFF_T
+#if	defined(__LARGE__) || defined(__HUGE__) || defined(__COMPACT__)
+typedef long	ptrdiff_t;
+#else
+typedef int	ptrdiff_t;
+#endif
+#endif
+#ifndef _SIZE_T
+#define _SIZE_T
+typedef unsigned size_t;
+#endif
+#endif
+
+#ifndef NULL
+#if defined(__TINY__) || defined(__SMALL__) || defined(__MEDIUM__)
+#define NULL	0
+#else
+#define NULL	0L
+#endif
+#endif
+
+int	_Cdecl brk	(void *addr);
+void	*_Cdecl calloc	(size_t nitems, size_t size);
+
+#if defined(__COMPACT__) || defined(__LARGE__) || defined(__HUGE__)
+unsigned long _Cdecl coreleft	(void);
+#else
+unsigned _Cdecl coreleft	(void);
+#endif
+
+void	 _Cdecl free	(void *block);
+void	*_Cdecl malloc	(size_t size);
+void	*_Cdecl realloc	(void *block, size_t size);
+void	*_Cdecl sbrk	(int incr);
+
+#if !__STDC__
+void far  * _Cdecl farcalloc	(unsigned long nunits, unsigned long unitsz);
+unsigned long _Cdecl farcoreleft(void);
+void _Cdecl      farfree	(void far *block);
+void far  *_Cdecl farmalloc	(unsigned long nbytes);
+void far  *_Cdecl farrealloc	(void far *oldblock, unsigned long nbytes);
+#endif
+/*	assert.h
+
+	assert macro
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+
+#include <stdio.h>	/*  fprintf() prototype & 'stderr' definition */
+#include <stdlib.h>	/* abort() prototype */
+
+
+#if	!defined(NDEBUG)
+#define assert(p)	if(!(p)){fprintf(stderr,\
+		"Assertion failed: %s, file %s, line %d\n",\
+		#p, __FILE__, __LINE__);abort();}
+#else
+#define assert(p)
+#endif
+/*	bios.h
+
+	Access to bios services.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+int	_Cdecl bioscom(int cmd, char abyte, int port);
+int	_Cdecl biosdisk(int cmd, int drive, int head, int track, int sector,
+			int nsects, void *buffer);
+int	_Cdecl biosequip(void);
+int	_Cdecl bioskey(int cmd);
+int	_Cdecl biosmemory(void);
+int	_Cdecl biosprint(int cmd, int abyte, int port);
+long	_Cdecl biostime(int cmd, long newtime);
+ # ifndef BOOLEAN
+ # define BOOLLEAN	short
+ # define TRUE		1
+ # define FALSE		0
+
+ # define NOT		!
+ # define AND		&&
+ # define OR		||
+
+ # define  BOOVAL(x)       (x) ? "TRUE : FALSE "
+
+ # endif
+/*	conio.h
+
+	Direct MSDOS console input/output.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if	!defined(__VIDEO)
+#define __VIDEO
+
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#ifndef	__OLDCONIO__
+
+struct text_info {
+	unsigned char winleft;
+	unsigned char wintop;
+	unsigned char winright;
+	unsigned char winbottom;
+	unsigned char attribute;
+	unsigned char normattr;
+	unsigned char currmode;
+	unsigned char screenheight;
+	unsigned char screenwidth;
+	unsigned char curx;
+	unsigned char cury;
+};
+
+enum text_modes { LASTMODE=-1, BW40=0, C40, BW80, C80, MONO=7 };
+
+#if	!defined(__COLORS)
+#define __COLORS
+
+enum COLORS {
+	BLACK,			/* dark colors */
+	BLUE,
+	GREEN,
+	CYAN,
+	RED,
+	MAGENTA,
+	BROWN,
+	LIGHTGRAY,
+	DARKGRAY,		/* light colors */
+	LIGHTBLUE,
+	LIGHTGREEN,
+	LIGHTCYAN,
+	LIGHTRED,
+	LIGHTMAGENTA,
+	YELLOW,
+	WHITE
+};
+#endif
+
+#define BLINK		128	/* blink bit */
+
+extern	 int _Cdecl directvideo;
+
+void 	 _Cdecl clreol		(void);
+void 	 _Cdecl clrscr		(void);
+void 	 _Cdecl delline		(void);
+int	 _Cdecl gettext		(int left, int top, int right, int bottom,
+				 void *destin);
+void	 _Cdecl gettextinfo	(struct text_info *r);
+void 	 _Cdecl gotoxy		(int x, int y);
+void	 _Cdecl highvideo	(void);
+void 	 _Cdecl insline		(void);
+void	 _Cdecl lowvideo	(void);
+int	 _Cdecl movetext	(int left, int top, int right, int bottom, 
+				 int destleft, int desttop);
+void	 _Cdecl normvideo	(void);
+int	 _Cdecl puttext		(int left, int top, int right, int bottom,
+				 void *source);
+void	 _Cdecl textattr	(int newattr);
+void 	 _Cdecl textbackground	(int newcolor);
+void 	 _Cdecl textcolor	(int newcolor);
+void 	 _Cdecl textmode	(int newmode);
+int  	 _Cdecl wherex		(void);
+int  	 _Cdecl wherey		(void);
+void 	 _Cdecl window		(int left, int top, int right, int bottom);
+#endif
+
+char	*_Cdecl cgets		(char *str);
+int  	 _Cdecl cprintf		(const char *format, ...);
+int	 _Cdecl cputs		(const char *str);
+int	 _Cdecl cscanf		(const char *format, ...);
+int	 _Cdecl getch		(void);
+int	 _Cdecl getche		(void);
+char	*_Cdecl getpass		(const char *prompt);
+int	 _Cdecl kbhit		(void);
+int	 _Cdecl putch		(int c);
+int	 _Cdecl ungetch		(int ch);
+
+#endif
+/*	ctype.h
+
+	Defines the ctype macros.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#define _IS_SP	1			/* is space */
+#define _IS_DIG	2			/* is digit indicator */
+#define _IS_UPP	4			/* is upper case */
+#define _IS_LOW	8			/* is lower case */
+#define _IS_HEX	16			/* [A-F or [a-f] */
+#define _IS_CTL	32			/* Control */
+#define _IS_PUN	64			/* punctuation */
+
+extern	char _Cdecl _ctype[];	 /* Character type array */
+
+#define isalnum(c)	(_ctype[(c) + 1] & (_IS_DIG | _IS_UPP | _IS_LOW))
+#define isalpha(c)	(_ctype[(c) + 1] & (_IS_UPP | _IS_LOW))
+#define isascii(c)	((unsigned)(c) < 128)
+#define iscntrl(c)	(_ctype[(c) + 1] & _IS_CTL)
+#define isdigit(c)	(_ctype[(c) + 1] & _IS_DIG)
+#define isgraph(c)	((c) >= 0x21 && (c) <= 0x7e)
+#define islower(c)	(_ctype[(c) + 1] & _IS_LOW)
+#define isprint(c)	((c) >= 0x20 && (c) <= 0x7e)
+#define ispunct(c)	(_ctype[(c) + 1] & _IS_PUN)
+#define isspace(c)	(_ctype[(c) + 1] & _IS_SP)
+#define isupper(c)	(_ctype[(c) + 1] & _IS_UPP)
+#define isxdigit(c)	(_ctype[(c) + 1] & (_IS_DIG | _IS_HEX))
+
+#define _toupper(c)	((c) + 'A' - 'a')
+#define _tolower(c)	((c) + 'a' - 'A')
+#define toascii(c)	((c) & 0x7f)
+
+int	_Cdecl tolower(int ch);
+int	_Cdecl toupper(int ch);
+/*	dir.h
+
+	Defines structures, macros, and functions for dealing with
+	directories and pathnames.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#if     !defined(__DIR_DEF_)
+#define __DIR_DEF_
+
+struct	ffblk	{
+	char		ff_reserved[21];
+	char		ff_attrib;
+	unsigned	ff_ftime;
+	unsigned	ff_fdate;
+	long		ff_fsize;
+	char		ff_name[13];
+};
+
+#define WILDCARDS 0x01
+#define EXTENSION 0x02
+#define FILENAME  0x04
+#define DIRECTORY 0x08
+#define DRIVE	  0x10
+
+#define MAXPATH   80
+#define MAXDRIVE  3
+#define MAXDIR	  66
+#define MAXFILE   9
+#define MAXEXT	  5
+
+int	 _Cdecl chdir		(const char *path);
+int	 _Cdecl findfirst	(const char *path, struct ffblk *ffblk, 
+				 int attrib);
+int	 _Cdecl findnext	(struct ffblk *ffblk);
+void	 _Cdecl fnmerge		(char *path,const char *drive,const char *dir,
+				 const char *name, const char *ext);
+int	 _Cdecl fnsplit		(const char *path, char *drive, char *dir, 
+				 char *name, char *ext);
+int	 _Cdecl getcurdir	(int drive, char *directory);
+char	*_Cdecl getcwd		(char *buf, int buflen);
+int	 _Cdecl getdisk		(void);
+int	 _Cdecl mkdir		(const char *path);
+char	*_Cdecl mktemp		(char *template);
+int	 _Cdecl rmdir		(const char *path);
+char	*_Cdecl searchpath	(const char *file);
+int	 _Cdecl setdisk		(int drive);
+
+#endif
+/*	dos.h
+
+	Defines structs, unions, macros, and functions for dealing
+	with MSDOS and the Intel iAPX86 microprocessor family.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#if     !defined(__DOS_DEF_)
+#define __DOS_DEF_
+
+/* Variables */
+extern	int		_Cdecl _8087;
+extern	int		_Cdecl _argc;
+extern	char	      **_Cdecl _argv;
+extern	char	      **_Cdecl  environ;
+extern	int		_Cdecl _doserrno;
+extern	unsigned	_Cdecl _heaplen;
+extern	unsigned char	_Cdecl _osmajor;
+extern	unsigned char	_Cdecl _osminor;
+extern	unsigned 	_Cdecl _psp;
+extern	unsigned	_Cdecl _stklen;
+extern	unsigned 	_Cdecl _version;
+
+#define FA_RDONLY	0x01		/* Read only attribute */
+#define FA_HIDDEN	0x02		/* Hidden file */
+#define FA_SYSTEM	0x04		/* System file */
+#define FA_LABEL	0x08		/* Volume label */
+#define FA_DIREC	0x10		/* Directory */
+#define FA_ARCH		0x20		/* Archive */
+
+#define NFDS	20			/* Maximum number of fds */
+
+struct	fcb	{
+	char	fcb_drive;		/* 0 = default, 1 = A, 2 = B */
+	char	fcb_name[8];		/* File name */
+	char	fcb_ext[3];		/* File extension */
+	short	fcb_curblk;		/* Current block number */
+	short	fcb_recsize;		/* Logical record size in bytes */
+	long	fcb_filsize;		/* File size in bytes */
+	short	fcb_date;		/* Date file was last written */
+	char	fcb_resv[10];		/* Reserved for DOS */
+	char	fcb_currec;		/* Current record in block */
+	long	fcb_random;		/* Random record number */
+};
+
+struct	xfcb	{
+	char		xfcb_flag;	/* Contains 0xff to indicate xfcb */
+	char		xfcb_resv[5];	/* Reserved for DOS */
+	char		xfcb_attr;	/* Search attribute */
+	struct	fcb	xfcb_fcb;	/* The standard fcb */
+};
+
+struct	country {
+	int	co_date;
+	char	co_curr[5];
+	char	co_thsep[2];
+	char	co_desep[2];
+	char	co_dtsep[2];
+	char	co_tmsep[2];
+	char	co_currstyle;
+	char	co_digits;
+	char	co_time;
+	long	co_case;
+	char	co_dasep[2];
+	char	co_fill[10];
+};
+
+struct	DOSERROR {
+	int	exterror;
+	char	class;
+	char	action;
+	char	locus;
+};
+
+struct	dfree	{
+	unsigned df_avail;
+	unsigned df_total;
+	unsigned df_bsec;
+	unsigned df_sclus;
+};
+
+struct	fatinfo {
+	char	fi_sclus;
+	char	fi_fatid;
+	int	fi_nclus;
+	int	fi_bysec;
+};
+
+struct	devhdr	{
+	long		dh_next;	/* Next device pointer */
+	short		dh_attr;	/* Attributes */
+	unsigned short	dh_strat;	/* Driver strategy routine */
+	unsigned short	dh_inter;	/* Driver interrupt routine */
+	char		dh_name[8];	/* Device name */
+};
+
+struct	time	{
+	unsigned char	ti_min;		/* Minutes */
+	unsigned char	ti_hour;	/* Hours */
+	unsigned char	ti_hund;	/* Hundredths of seconds */
+	unsigned char	ti_sec;		/* Seconds */
+};
+
+struct	date	{
+	int		da_year;	/* Year - 1980 */
+	char		da_day;		/* Day of the month */
+	char		da_mon;		/* Month (1 = Jan) */
+};
+
+struct WORDREGS {
+	unsigned int	ax, bx, cx, dx, si, di, cflag, flags;
+};
+
+struct BYTEREGS {
+	unsigned char	al, ah, bl, bh, cl, ch, dl, dh;
+};
+
+union	REGS	{
+	struct	WORDREGS x;
+	struct	BYTEREGS h;
+};
+
+struct	SREGS	{
+	unsigned int	es;
+	unsigned int	cs;
+	unsigned int	ss;
+	unsigned int	ds;
+};
+
+struct	REGPACK {
+	unsigned	r_ax, r_bx, r_cx, r_dx;
+	unsigned	r_bp, r_si, r_di, r_ds, r_es, r_flags;
+};
+
+#define FP_OFF(fp)	((unsigned)(fp))
+#define FP_SEG(fp)	((unsigned)((unsigned long)(fp) >> 16))
+
+
+typedef struct {
+	char	drive;		/* do not change	*/
+	char	pattern [13];	/*  these fields,	*/
+	char	reserved [7];	/*   Microsoft reserved */
+	char	attrib;
+	short	time;
+	short	date;
+	long	size;
+	char	nameZ [13];	/* result of the search, asciiz */
+}	dosSearchInfo;	/* used with DOS functions 4E, 4F	*/
+
+
+int	 _Cdecl absread	(int drive, int nsects, int lsect, void *buffer);
+int	 _Cdecl abswrite(int drive, int nsects, int lsect, void *buffer);
+int	 _Cdecl allocmem(unsigned size, unsigned *segp);
+int	 _Cdecl bdos	(int dosfun, unsigned dosdx, unsigned dosal);
+int	 _Cdecl bdosptr	(int dosfun, void *argument, unsigned dosal);
+struct	country *_Cdecl country	(int xcode, struct country *cp);
+void	 _Cdecl ctrlbrk	(int _Cdecl (*handler)(void));
+void	 _Cdecl delay	(unsigned milliseconds);
+void	 _Cdecl disable	(void);
+int	 _Cdecl dosexterr	(struct DOSERROR *eblkp);
+long	 _Cdecl dostounix	(struct date *d, struct time *t);
+void          __emit__();
+void	 _Cdecl enable	(void);
+int	 _Cdecl freemem	(unsigned segx);
+int	 _Cdecl getcbrk	(void);
+void	 _Cdecl getdate	(struct date *datep);
+void	 _Cdecl getdfree(unsigned char drive, struct dfree *dtable);
+void	 _Cdecl getfat	(unsigned char drive, struct fatinfo *dtable);
+void	 _Cdecl getfatd	(struct fatinfo *dtable);
+unsigned _Cdecl getpsp	(void);
+int	 _Cdecl getswitchar	(void);
+void	 _Cdecl gettime	(struct time *timep);
+void	interrupt 	(* _Cdecl getvect(int interruptno)) ();
+int	 _Cdecl getverify	(void);
+void	 _Cdecl harderr	(int _Cdecl (*handler)());
+void	 _Cdecl hardresume	(int axret);
+void	 _Cdecl hardretn(int retn);
+int	 _Cdecl inport	(int portid);
+unsigned char	_Cdecl inportb(int portid);
+int	 _Cdecl int86	(int intno, union REGS *inregs, union REGS *outregs);
+int	 _Cdecl int86x	(int intno, union REGS *inregs, union REGS *outregs,
+			 struct SREGS *segregs);
+int	 _Cdecl intdos	(union REGS *inregs, union REGS *outregs);
+int	 _Cdecl intdosx	(union REGS *inregs, union REGS *outregs,
+			 struct SREGS *segregs);
+void	 _Cdecl intr	(int intno, struct REGPACK *preg);
+void	 _Cdecl keep	(unsigned char status, unsigned size);
+void 	 _Cdecl nosound	(void);
+void	 _Cdecl outport	(int portid, int value);
+void	 _Cdecl outportb(int portid, unsigned char value);
+char	*_Cdecl parsfnm	(const char *cmdline, struct fcb *fcb, int opt);
+int	 _Cdecl peek	(unsigned segment, unsigned offset);
+char	 _Cdecl peekb	(unsigned segment, unsigned offset);
+void	 _Cdecl poke	(unsigned segment, unsigned offset, int value);
+void	 _Cdecl pokeb	(unsigned segment, unsigned offset, char value);
+int	 _Cdecl randbrd	(struct fcb *fcb, int rcnt);
+int	 _Cdecl randbwr	(struct fcb *fcb, int rcnt);
+void	 _Cdecl segread	(struct SREGS *segp);
+int	 _Cdecl setblock(unsigned segx, unsigned newsize);
+int	 _Cdecl setcbrk	(int cbrkvalue);
+void	 _Cdecl setdate	(struct date *datep);
+void	 _Cdecl setswitchar	(char ch);
+void	 _Cdecl settime	(struct time *timep);
+void	 _Cdecl setvect	(int interruptno, void interrupt (*isr) ());
+void	 _Cdecl setverify	(int value);
+void	 _Cdecl sleep	(unsigned seconds);
+void 	 _Cdecl sound	(unsigned frequency);
+void	 _Cdecl unixtodos	(long time, struct date *d, struct time *t);
+int	 _Cdecl	unlink	(const char *path);
+
+	/* These are in-line functions.  These prototypes just clean up
+	   some syntax checks and code generation.
+	 */
+
+void	_Cdecl	__cli__		(void);
+void	_Cdecl	__sti__		(void);
+unsigned char _Cdecl __inportb__(int portid);
+void	_Cdecl	__outportb__	(int portid, unsigned char value);
+void	_Cdecl	__int__		(int interruptnum);
+
+#define disable()	__cli__()		/* Clear interrupt flag */
+#define enable()	__sti__()		/* Set interrupt flag */
+#define inportb(portid) __inportb__(portid)	/* Byte IN instruction */
+#define outportb(portid, v) __outportb__(portid,v)/* Byte OUT instruction */
+#define geninterrupt(i) __int__(i)		/* Interrupt instruction */
+
+/* some other compilers use inp, outp for inportb, outportb */
+#define inp(portid)	inportb(portid)
+#define outp(portid,v)	outportb(portid,v)
+
+#if !__STDC__
+char far *cdecl getdta(void);
+void	  cdecl setdta(char far *dta);
+
+#define MK_FP(seg,ofs)	((void far *) \
+			   (((unsigned long)(seg) << 16) | (unsigned)(ofs)))
+
+#define poke(a,b,c)	(*((int  far*)MK_FP((a),(b))) = (int)(c))
+#define pokeb(a,b,c)	(*((char far*)MK_FP((a),(b))) = (char)(c))
+#define peek(a,b)	(*((int  far*)MK_FP((a),(b))))
+#define peekb(a,b)	(*((char far*)MK_FP((a),(b))))
+#endif
+
+#endif
+/*	errno.h
+
+	Defines the system error variable errno and the error
+	numbers set by system calls. Errors which exist in Unix(tm)
+	but not MSDOS have value -1.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+
+/*  Dos Error Codes */
+
+#define EZERO	 0		/* Error 0			*/
+#define EINVFNC	 1		/* Invalid function number	*/
+#define ENOFILE	 2		/* File not found		*/
+#define ENOPATH	 3		/* Path not found		*/
+#define ECONTR	 7		/* Memory blocks destroyed	*/
+#define EINVMEM	 9		/* Invalid memory block address */
+#define EINVENV 10		/* Invalid environment		*/
+#define EINVFMT 11		/* Invalid format		*/
+#define EINVACC 12		/* Invalid access code		*/
+#define EINVDAT 13		/* Invalid data			*/
+#define EINVDRV 15		/* Invalid drive specified	*/
+#define ECURDIR 16		/* Attempt to remove CurDir	*/
+#define ENOTSAM 17		/* Not same device		*/
+#define ENMFILE 18		/* No more files		*/
+
+#define ENOENT	 2		/* No such file or directory	*/
+#define EMFILE	 4		/* Too many open files		*/
+#define EACCES	 5		/* Permission denied		*/
+#define EBADF	 6		/* Bad file number		*/
+#define ENOMEM	 8		/* Not enough core		*/
+#define ENODEV	15		/* No such device		*/
+#define EINVAL	19		/* Invalid argument		*/
+#define E2BIG	20		/* Arg list too long		*/
+#define ENOEXEC 21		/* Exec format error		*/
+#define EXDEV	22		/* Cross-device link		*/
+#define EDOM	33		/* Math argument		*/
+#define ERANGE	34		/* Result too large		*/
+#define EEXIST	35		/* File already exists		*/
+
+#define EFAULT	-1		/* Unknown error		*/
+#define EPERM	-1		/* UNIX - not MSDOS		*/
+#define ESRCH	-1		/* UNIX - not MSDOS		*/
+#define EINTR	-1		/* UNIX - not MSDOS		*/
+#define EIO	-1		/* UNIX - not MSDOS		*/
+#define ENXIO	-1		/* UNIX - not MSDOS		*/
+#define ECHILD	-1		/* UNIX - not MSDOS		*/
+#define EAGAIN	-1		/* UNIX - not MSDOS		*/
+#define ENOTBLK -1		/* UNIX - not MSDOS		*/
+#define EBUSY	-1		/* UNIX - not MSDOS		*/
+#define ENOTDIR -1		/* UNIX - not MSDOS		*/
+#define EISDIR	-1		/* UNIX - not MSDOS		*/
+#define ENFILE	-1		/* UNIX - not MSDOS		*/
+#define ENOTTY	-1		/* UNIX - not MSDOS		*/
+#define ETXTBSY -1		/* UNIX - not MSDOS		*/
+#define EFBIG	-1		/* UNIX - not MSDOS		*/
+#define ENOSPC	-1		/* UNIX - not MSDOS		*/
+#define ESPIPE	-1		/* UNIX - not MSDOS		*/
+#define EROFS	-1		/* UNIX - not MSDOS		*/
+#define EMLINK	-1		/* UNIX - not MSDOS		*/
+#define EPIPE	-1		/* UNIX - not MSDOS		*/
+#define EUCLEAN -1		/* UNIX - not MSDOS		*/
+
+
+
+#define _sys_nerr 35		/* highest defined system error number */
+
+extern	int	_Cdecl	 errno;
+extern	int	_Cdecl	_doserrno;
+/*	fcntl.h
+
+	Define flag values accessible to open.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+extern int _Cdecl _fmode;
+
+/* The first three can only be set by open */
+
+#define O_RDONLY	     1
+#define O_WRONLY	     2
+#define O_RDWR		     4
+
+/* Flag values for open only */
+
+#define O_CREAT		0x0100	/* create and open file */
+#define O_TRUNC		0x0200	/* open with truncation */
+#define O_EXCL		0x0400	/* exclusive open */
+
+/* The "open flags" defined above are not needed after open, hence they
+   are re-used for other purposes when the file is running.  Sorry, its
+   getting crowded !
+*/
+#define _O_RUNFLAGS	0x0700
+#define _O_EOF		0x0200 /* set when text file hits ^Z   */
+
+/* a file in append mode may be written to only at its end.
+*/
+#define O_APPEND	0x0800	/* to end of file */
+ 
+/* MSDOS special bits */
+
+#define O_CHANGED	0x1000	/* user may read these bits, but	*/
+#define O_DEVICE	0x2000	/*   only RTL\io functions may touch.	*/
+#define O_TEXT		0x4000	/* CR-LF translation	*/
+#define O_BINARY	0x8000	/* no translation	*/
+
+/* DOS 3.x options */
+
+#define O_NOINHERIT	0x80
+#define O_DENYALL	0x10
+#define O_DENYWRITE	0x20
+#define O_DENYREAD	0x30
+#define O_DENYNONE	0x40
+/*	float.h
+
+	Defines implementation specific macros for dealing with
+	floating point.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#define FLT_RADIX			2
+#define FLT_ROUNDS			1
+#define FLT_GUARD			1
+#define FLT_NORMALIZE			1
+
+#define DBL_DIG				15
+#define FLT_DIG				6
+#define LDBL_DIG			19
+
+#define DBL_MANT_DIG			53
+#define FLT_MANT_DIG			24
+#define LDBL_MANT_DIG			64
+
+#define DBL_EPSILON			2.2204460492503131E-16
+#define FLT_EPSILON			1.19209290E-07F
+#define LDBL_EPSILON			1.084202172485504E-19
+
+/* smallest positive IEEE normal numbers */
+#define DBL_MIN				2.2250738585072014E-308
+#define FLT_MIN				1.17549435E-38F
+#define LDBL_MIN				_tiny_ldble
+
+#define DBL_MAX			_huge_dble
+#define FLT_MAX			_huge_flt
+#define LDBL_MAX			_huge_ldble
+
+#define DBL_MAX_EXP			+1024
+#define FLT_MAX_EXP			+128
+#define LDBL_MAX_EXP			+16384
+
+#define DBL_MAX_10_EXP			+308
+#define FLT_MAX_10_EXP			+38
+#define LDBL_MAX_10_EXP			+4932
+
+#define DBL_MIN_10_EXP			-307
+#define FLT_MIN_10_EXP			-37
+#define LDBL_MIN_10_EXP			-4931
+
+#define DBL_MIN_EXP			-1021
+#define FLT_MIN_EXP			-125
+#define LDBL_MIN_EXP			-16381
+
+extern float _Cdecl _huge_flt;
+extern double _Cdecl _huge_dble;
+extern long double _Cdecl _huge_ldble;
+extern long double _Cdecl _tiny_ldble;
+
+unsigned int _Cdecl _clear87(void);
+unsigned int _Cdecl _control87(unsigned int new, unsigned int mask);
+void	     _Cdecl _fpreset(void);
+unsigned int _Cdecl _status87(void);
+
+/* 8087/80287 Status Word format   */
+
+#define SW_INVALID		0x0001	/* Invalid operation		*/
+#define SW_DENORMAL		0x0002	/* Denormalized operand		*/
+#define SW_ZERODIVIDE		0x0004	/* Zero divide			*/
+#define SW_OVERFLOW		0x0008	/* Overflow			*/
+#define SW_UNDERFLOW		0x0010	/* Underflow			*/
+#define SW_INEXACT		0x0020	/* Precision (Inexact result)	*/
+
+/* 8087/80287 Control Word format */
+
+#define MCW_EM			0x003f	/* interrupt Exception Masks	*/
+#define	    EM_INVALID		0x0001	/*   invalid			*/
+#define	    EM_DENORMAL		0x0002	/*   denormal			*/
+#define	    EM_ZERODIVIDE	0x0004	/*   zero divide		*/
+#define	    EM_OVERFLOW		0x0008	/*   overflow			*/
+#define	    EM_UNDERFLOW	0x0010	/*   underflow			*/
+#define	    EM_INEXACT		0x0020	/*   inexact (precision)	*/
+
+#define MCW_IC			0x1000	/* Infinity Control		*/
+#define	    IC_AFFINE		0x1000	/*   affine			*/
+#define	    IC_PROJECTIVE	0x0000	/*   projective			*/
+
+#define MCW_RC			0x0c00	/* Rounding Control		*/
+#define	    RC_CHOP		0x0c00	/*   chop			*/
+#define	    RC_UP		0x0800	/*   up				*/
+#define	    RC_DOWN		0x0400	/*   down			*/
+#define	    RC_NEAR		0x0000	/*   near			*/
+
+#define MCW_PC			0x0300	/* Precision Control		*/
+#define	    PC_24		0x0000	/*    24 bits			*/
+#define	    PC_53		0x0200	/*    53 bits			*/
+#define	    PC_64		0x0300	/*    64 bits			*/
+
+/* 8087/80287 Initial Control Word */
+/* use affine infinity, mask underflow and precision exceptions */
+
+#define CW_DEFAULT	(RC_NEAR+PC_64+IC_AFFINE+EM_UNDERFLOW+EM_INEXACT)
+
+/* 
+	SIGFPE signal error types (for integer & float exceptions). 
+*/
+#define	FPE_INTOVFLOW		126	/* 80x86 Interrupt on overflow	*/
+#define	FPE_INTDIV0		127	/* 80x86 Integer divide by zero	*/
+
+#define	FPE_INVALID		129	/* 80x87 invalid operation	*/
+#define	FPE_ZERODIVIDE		131	/* 80x87 divide by zero		*/
+#define	FPE_OVERFLOW		132	/* 80x87 arithmetic overflow	*/
+#define	FPE_UNDERFLOW		133	/* 80x87 arithmetic underflow	*/
+#define	FPE_INEXACT		134	/* 80x87 precision loss		*/
+#define	FPE_EXPLICITGEN		140	/* When SIGFPE is raise()'d	*/
+
+/* 
+			SIGSEGV signal error types.
+*/
+#define	SEGV_BOUND		10	/* A BOUND violation (SIGSEGV)	*/
+#define	SEGV_EXPLICITGEN	11	/* When SIGSEGV is raise()'d	*/
+
+/* 
+			SIGILL signal error types.
+*/
+#define	ILL_EXECUTION		20	/* Illegal operation exception	*/
+#define	ILL_EXPLICITGEN		21	/* When SIGILL is raise()'d	*/
+
+/*	graphics.h
+
+	Definitions for Graphics Package.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#if     !defined(__GRAPHX_DEF_)
+#define __GRAPHX_DEF_
+
+enum graphics_errors {		/* graphresult error return codes */
+	grOk		   =   0,
+	grNoInitGraph	   =  -1,
+	grNotDetected	   =  -2,
+	grFileNotFound	   =  -3,
+	grInvalidDriver    =  -4,
+	grNoLoadMem	   =  -5,
+	grNoScanMem	   =  -6,
+	grNoFloodMem	   =  -7,
+	grFontNotFound	   =  -8,
+	grNoFontMem	   =  -9,
+	grInvalidMode	   = -10,
+	grError 	   = -11,   /* generic error */
+	grIOerror	   = -12,
+	grInvalidFont	   = -13,
+	grInvalidFontNum   = -14,
+	grInvalidVersion   = -18
+};
+
+enum graphics_drivers { 	/* define graphics drivers */
+	DETECT, 		/* requests autodetection */
+	CGA, MCGA, EGA, EGA64, EGAMONO, IBM8514,	/* 1 - 6 */
+	HERCMONO, ATT400, VGA, PC3270,			/* 7 - 10 */
+	CURRENT_DRIVER = -1
+};
+
+enum graphics_modes {		/* graphics modes for each driver */
+    CGAC0      = 0,  /* 320x200 palette 0; 1 page	*/
+    CGAC1      = 1,  /* 320x200 palette 1; 1 page	*/
+    CGAC2      = 2,  /* 320x200 palette 2: 1 page	*/
+    CGAC3      = 3,  /* 320x200 palette 3; 1 page	*/
+    CGAHI      = 4,  /* 640x200 1 page			*/
+    MCGAC0     = 0,  /* 320x200 palette 0; 1 page	*/
+    MCGAC1     = 1,  /* 320x200 palette 1; 1 page	*/
+    MCGAC2     = 2,  /* 320x200 palette 2; 1 page	*/
+    MCGAC3     = 3,  /* 320x200 palette 3; 1 page	*/
+    MCGAMED    = 4,  /* 640x200 1 page			*/
+    MCGAHI     = 5,  /* 640x480 1 page			*/
+    EGALO      = 0,  /* 640x200 16 color 4 pages	*/
+    EGAHI      = 1,  /* 640x350 16 color 2 pages	*/
+    EGA64LO    = 0,  /* 640x200 16 color 1 page 	*/
+    EGA64HI    = 1,  /* 640x350 4 color  1 page 	*/
+    EGAMONOHI  = 0,  /* 640x350 64K on card, 1 page - 256K on card, 4 pages */
+    HERCMONOHI = 0,  /* 720x348 2 pages 		*/
+    ATT400C0   = 0,  /* 320x200 palette 0; 1 page	*/
+    ATT400C1   = 1,  /* 320x200 palette 1; 1 page	*/
+    ATT400C2   = 2,  /* 320x200 palette 2; 1 page	*/
+    ATT400C3   = 3,  /* 320x200 palette 3; 1 page	*/
+    ATT400MED  = 4,  /* 640x200 1 page			*/
+    ATT400HI   = 5,  /* 640x400 1 page			*/
+    VGALO      = 0,  /* 640x200 16 color 4 pages	*/
+    VGAMED     = 1,  /* 640x350 16 color 2 pages	*/
+    VGAHI      = 2,  /* 640x480 16 color 1 page 	*/
+    PC3270HI   = 0,  /* 720x350 1 page			*/
+    IBM8514LO  = 0,  /* 640x480 256 colors		*/
+    IBM8514HI  = 1   /*1024x768 256 colors		*/
+};
+
+/* Colors for setpalette and setallpalette */
+
+#if	!defined(__COLORS)
+#define __COLORS
+
+enum COLORS {
+    BLACK,		    /* dark colors */
+    BLUE,
+    GREEN,
+    CYAN,
+    RED,
+    MAGENTA,
+    BROWN,
+    LIGHTGRAY,
+    DARKGRAY,		    /* light colors */
+    LIGHTBLUE,
+    LIGHTGREEN,
+    LIGHTCYAN,
+    LIGHTRED,
+    LIGHTMAGENTA,
+    YELLOW,
+    WHITE
+};
+#endif
+
+enum CGA_COLORS {
+    CGA_LIGHTGREEN     = 1,		/* Palette C0 Color Names	*/
+    CGA_LIGHTRED       = 2,
+    CGA_YELLOW	       = 3,
+
+    CGA_LIGHTCYAN      = 1,		/* Palette C1 Color Names	*/
+    CGA_LIGHTMAGENTA   = 2,
+    CGA_WHITE	       = 3,
+
+    CGA_GREEN	       = 1,		/* Palette C2 Color Names	*/
+    CGA_RED	       = 2,
+    CGA_BROWN	       = 3,
+
+    CGA_CYAN	       = 1,		/* Palette C3 Color Names	*/
+    CGA_MAGENTA        = 2,
+    CGA_LIGHTGRAY      = 3
+};
+
+
+enum EGA_COLORS {
+    EGA_BLACK		 =  0,	    /* dark colors */
+    EGA_BLUE		 =  1,
+    EGA_GREEN		 =  2,
+    EGA_CYAN		 =  3,
+    EGA_RED		 =  4,
+    EGA_MAGENTA 	 =  5,
+    EGA_BROWN		 =  20,
+    EGA_LIGHTGRAY	 =  7,
+    EGA_DARKGRAY	 =  56,     /* light colors */
+    EGA_LIGHTBLUE	 =  57,
+    EGA_LIGHTGREEN	 =  58,
+    EGA_LIGHTCYAN	 =  59,
+    EGA_LIGHTRED	 =  60,
+    EGA_LIGHTMAGENTA	 =  61,
+    EGA_YELLOW		 =  62,
+    EGA_WHITE		 =  63
+};
+
+enum line_styles {		/* Line styles for get/setlinestyle */
+	SOLID_LINE   = 0,
+	DOTTED_LINE  = 1,
+	CENTER_LINE  = 2,
+	DASHED_LINE  = 3,
+	USERBIT_LINE = 4,	/* User defined line style */
+};
+
+enum line_widths {		/* Line widths for get/setlinestyle */
+	NORM_WIDTH  = 1,
+	THICK_WIDTH = 3,
+};
+
+enum font_names {
+	DEFAULT_FONT	= 0,	/* 8x8 bit mapped font */
+	TRIPLEX_FONT	= 1,	/* "Stroked" fonts */
+	SMALL_FONT	= 2,
+	SANS_SERIF_FONT = 3,
+	GOTHIC_FONT	= 4
+};
+
+#define HORIZ_DIR	0	/* left to right */
+#define VERT_DIR	1	/* bottom to top */
+
+#define USER_CHAR_SIZE	0	/* user-defined char size */
+
+enum fill_patterns {		/* Fill patterns for get/setfillstyle */
+	EMPTY_FILL,		/* fills area in background color */
+	SOLID_FILL,		/* fills area in solid fill color */
+	LINE_FILL,		/* --- fill */
+	LTSLASH_FILL,		/* /// fill */
+	SLASH_FILL,		/* /// fill with thick lines */
+	BKSLASH_FILL,		/* \\\ fill with thick lines */
+	LTBKSLASH_FILL, 	/* \\\ fill */
+	HATCH_FILL,		/* light hatch fill */
+	XHATCH_FILL,		/* heavy cross hatch fill */
+	INTERLEAVE_FILL,	/* interleaving line fill */
+	WIDE_DOT_FILL,		/* Widely spaced dot fill */
+	CLOSE_DOT_FILL, 	/* Closely spaced dot fill */
+	USER_FILL		/* user defined fill */
+};
+
+enum putimage_ops {		/* BitBlt operators for putimage */
+	COPY_PUT,		/* MOV */
+	XOR_PUT,		/* XOR */
+	OR_PUT, 		/* OR  */
+	AND_PUT,		/* AND */
+	NOT_PUT 		/* NOT */
+};
+
+enum text_just {		/* Horizontal and vertical justification
+				   for settextjustify */
+	LEFT_TEXT	= 0,
+	CENTER_TEXT	= 1,
+	RIGHT_TEXT	= 2,
+
+	BOTTOM_TEXT	= 0,
+     /* CENTER_TEXT	= 1,  already defined above */
+	TOP_TEXT	= 2
+};
+
+
+#define MAXCOLORS 15
+
+struct palettetype {
+	unsigned char size;
+	signed char colors[MAXCOLORS+1];
+};
+
+struct linesettingstype {
+	int linestyle;
+	unsigned upattern;
+	int thickness;
+};
+
+struct textsettingstype {
+	int font;
+	int direction;
+	int charsize;
+	int horiz;
+	int vert;
+};
+
+struct fillsettingstype {
+	int pattern;
+	int color;
+};
+
+struct pointtype {
+	int x, y;
+};
+
+struct viewporttype {
+	int left, top, right, bottom;
+	int clip;
+};
+
+struct arccoordstype {
+	int x, y;
+	int xstart, ystart, xend, yend;
+};
+
+void	   far _Cdecl arc(int x, int y, int stangle, int endangle,
+			  int radius);
+void	   far _Cdecl bar(int left, int top, int right, int bottom);
+void	   far _Cdecl bar3d(int left, int top, int right, int bottom,
+			    int depth, int topflag);
+void	   far _Cdecl circle(int x, int y, int radius);
+void	   far _Cdecl cleardevice(void);
+void	   far _Cdecl clearviewport(void);
+void	   far _Cdecl closegraph(void);
+void	   far _Cdecl detectgraph(int far *graphdriver,int far *graphmode);
+void	   far _Cdecl drawpoly(int numpoints, int far *polypoints);
+void	   far _Cdecl ellipse(int x, int y, int stangle, int endangle,
+			      int xradius, int yradius);
+void	   far _Cdecl fillellipse( int x, int y, int xradius, int yradius );
+void	   far _Cdecl fillpoly(int numpoints, int far *polypoints);
+void	   far _Cdecl floodfill(int x, int y, int border);
+void	   far _Cdecl getarccoords(struct arccoordstype far *arccoords);
+void	   far _Cdecl getaspectratio(int far *xasp, int far *yasp);
+int	   far _Cdecl getbkcolor(void);
+int	   far _Cdecl getcolor(void);
+struct palettetype * far _Cdecl getdefaultpalette( void );
+char *	   far _Cdecl getdrivername( void );
+void	   far _Cdecl getfillpattern(char far *pattern);
+void	   far _Cdecl getfillsettings(struct fillsettingstype far *fillinfo);
+int	   far _Cdecl getgraphmode(void);
+void	   far _Cdecl getimage(int left, int top, int right, int bottom,
+			       void far *bitmap);
+void	   far _Cdecl getlinesettings(struct linesettingstype far *lineinfo);
+int	   far _Cdecl getmaxcolor(void);
+int	   far _Cdecl getmaxmode(void);
+int	   far _Cdecl getmaxx(void);
+int	   far _Cdecl getmaxy(void);
+char *	   far _Cdecl getmodename( int mode_number );
+void	   far _Cdecl getmoderange(int graphdriver, int far *lomode,
+				   int far *himode);
+unsigned   far _Cdecl getpixel(int x, int y);
+void	   far _Cdecl getpalette(struct palettetype far *palette);
+int	   far _Cdecl getpalettesize( void );
+void	   far _Cdecl gettextsettings(struct textsettingstype far *texttypeinfo);
+void	   far _Cdecl getviewsettings(struct viewporttype far *viewport);
+int	   far _Cdecl getx(void);
+int	   far _Cdecl gety(void);
+void	   far _Cdecl graphdefaults(void);
+char *	   far _Cdecl grapherrormsg(int errorcode);
+void	   far _Cdecl _graphfreemem(void far *ptr, unsigned size);
+void far * far _Cdecl _graphgetmem(unsigned size);
+int	   far _Cdecl graphresult(void);
+unsigned   far _Cdecl imagesize(int left, int top, int right, int bottom);
+void	   far _Cdecl initgraph(int  far *graphdriver,
+				int  far *graphmode,
+				char far *pathtodriver);
+int	   far _Cdecl installuserdriver( char far *name, int huge (*detect)(void) );
+int	   far _Cdecl installuserfont( char far *name );
+void	   far _Cdecl line(int x1, int y1, int x2, int y2);
+void	   far _Cdecl linerel(int dx, int dy);
+void	   far _Cdecl lineto(int x, int y);
+void	   far _Cdecl moverel(int dx, int dy);
+void	   far _Cdecl moveto(int x, int y);
+void	   far _Cdecl outtext(char far *textstring);
+void	   far _Cdecl outtextxy(int x, int y, char far *textstring);
+void	   far _Cdecl pieslice(int x, int y, int stangle, int endangle,
+			       int radius);
+void	   far _Cdecl putimage(int left, int top, void far *bitmap, int op);
+void	   far _Cdecl putpixel(int x, int y, int color);
+void	   far _Cdecl rectangle(int left, int top, int right, int bottom);
+void	   far _Cdecl restorecrtmode(void);
+void	   far _Cdecl sector( int X, int Y, int StAngle, int EndAngle,
+			      int XRadius, int YRadius );
+void	   far _Cdecl setactivepage(int page);
+void	   far _Cdecl setallpalette(struct palettetype far *palette);
+void	   far _Cdecl setaspectratio( int xasp, int yasp );
+void	   far _Cdecl setbkcolor(int color);
+void	   far _Cdecl setcolor(int color);
+void	   far _Cdecl setfillpattern(char far *upattern, int color);
+void	   far _Cdecl setfillstyle(int pattern, int color);
+unsigned   far _Cdecl setgraphbufsize(unsigned bufsize);
+void	   far _Cdecl setgraphmode(int mode);
+void	   far _Cdecl setlinestyle(int linestyle, unsigned upattern,
+				   int thickness);
+void	   far _Cdecl setpalette(int colornum, int color);
+void	   far _Cdecl setrgbpalette(int colornum,
+				    int red, int green, int blue);
+void	   far _Cdecl settextjustify(int horiz, int vert);
+void	   far _Cdecl settextstyle(int font, int direction, int charsize);
+void	   far _Cdecl setusercharsize(int multx, int divx,
+				      int multy, int divy);
+void	   far _Cdecl setviewport(int left, int top, int right, int bottom,
+				  int clip);
+void	   far _Cdecl setvisualpage(int page);
+void	   far _Cdecl setwritemode( int mode );
+int	   far _Cdecl textheight(char far *textstring);
+int	   far _Cdecl textwidth(char far *textstring);
+
+/***** graphics drivers *****/
+
+int	       _Cdecl registerbgidriver(void (*driver)(void));
+int	   far _Cdecl registerfarbgidriver(void far *driver);
+
+/* !!	     These "functions" are NOT user-callable          !! */
+/* !! They are there just so you can link in graphics drivers !! */
+
+void	       _Cdecl CGA_driver(void);
+void	       _Cdecl EGAVGA_driver(void);
+void	       _Cdecl IBM8514_driver(void);
+void	       _Cdecl Herc_driver(void);
+void	       _Cdecl ATT_driver(void);
+void	       _Cdecl PC3270_driver(void);
+
+extern int far _Cdecl CGA_driver_far[];
+extern int far _Cdecl EGAVGA_driver_far[];
+extern int far _Cdecl IBM8514_driver_far[];
+extern int far _Cdecl Herc_driver_far[];
+extern int far _Cdecl ATT_driver_far[];
+extern int far _Cdecl PC3270_driver_far[];
+
+
+/***** graphics fonts *****/
+
+int	       _Cdecl registerbgifont(void (*font)(void));
+int	   far _Cdecl registerfarbgifont(void far *font);
+
+/* !!	These "functions" are NOT user-callable,   !! */
+/* !! they are there just so you can link in fonts !! */
+
+void	       _Cdecl	triplex_font(void);
+void	       _Cdecl	  small_font(void);
+void	       _Cdecl sansserif_font(void);
+void	       _Cdecl	 gothic_font(void);
+
+extern int far _Cdecl	triplex_font_far[];
+extern int far _Cdecl	  small_font_far[];
+extern int far _Cdecl sansserif_font_far[];
+extern int far _Cdecl	 gothic_font_far[];
+
+
+#endif
+/*	io.h
+
+	Definitions for low level I/O functions.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#ifndef _IO_H
+#define _IO_H 1
+
+#define HANDLE_MAX	20U
+
+extern	unsigned int	_Cdecl _openfd[];
+
+struct	ftime	{
+	unsigned	ft_tsec	 : 5;	/* Two second interval */
+	unsigned	ft_min	 : 6;	/* Minutes */
+	unsigned	ft_hour	 : 5;	/* Hours */
+	unsigned	ft_day	 : 5;	/* Days */
+	unsigned	ft_month : 4;	/* Months */
+	unsigned	ft_year	 : 7;	/* Year */
+};
+
+#define SEEK_CUR	1
+#define SEEK_END	2
+#define SEEK_SET	0
+
+int  _Cdecl access	 (const char *path, int amode);
+int  _Cdecl _chmod	 (const char *path, int func, ... /* int attr */);
+int  _Cdecl chmod	 (const char *path, int amode);
+int  _Cdecl chsize	 (int handle, long size);
+int  _Cdecl _close	 (int handle);
+int  _Cdecl close	 (int handle);
+int  _Cdecl _creat	 (const char *path, int attribute);
+int  _Cdecl creat	 (const char *path, int amode);
+int  _Cdecl creatnew	 (const char *path, int mode); /* DOS 3.0 or later */
+int  _Cdecl creattemp	 (char *path, int amode); /* DOS 3.0 or later */
+int  _Cdecl dup		 (int handle);
+int  _Cdecl dup2	 (int oldhandle, int newhandle);
+int  _Cdecl eof		 (int handle);
+long _Cdecl filelength	 (int handle);
+int  _Cdecl getftime	 (int handle, struct ftime *ftimep);
+int  _Cdecl ioctl	 (int handle, int func, ...);
+		/* optional 3rd and 4th args are: void * argdx, int argcx */
+int  _Cdecl isatty	 (int handle);
+int  _Cdecl lock	 (int handle, long offset, long length);
+long _Cdecl lseek	 (int handle, long offset, int fromwhere);
+int  _Cdecl _open	 (const char *path, int oflags);
+int  _Cdecl open	 (const char *path, int access,... /*unsigned mode*/);
+int  _Cdecl _read	 (int handle, void *buf, unsigned len);
+int  _Cdecl read	 (int handle, void *buf, unsigned len);
+int  _Cdecl setftime	 (int handle, struct ftime *ftimep);
+int  _Cdecl setmode	 (int handle, int amode);
+long _Cdecl tell	 (int handle);
+unsigned _Cdecl umask	 (unsigned cmask);
+int  _Cdecl unlink	 (const char *path);
+int  _Cdecl unlock	 (int handle, long offset, long length);
+int  _Cdecl _write	 (int handle, void *buf, unsigned len);
+int  _Cdecl write	 (int handle, void *buf, unsigned len);
+ 
+/* macros for compatibility with earlier versions & other compilers. */
+#define sopen(path,access,shflag,mode)	 open (path, (access)|(shflag), mode)
+
+#endif	/* _IO_H */
+/*	limits.h
+
+	Defines implementation specific limits on type values.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#define CHAR_BIT			8
+
+#if (((int)((char)0x80)) < 0)
+#define CHAR_MAX			0x7F
+#define CHAR_MIN			0x80
+#else
+#define CHAR_MAX			0xFFU
+#define CHAR_MIN			0x00
+#endif
+
+#define SCHAR_MAX			0x7F
+#define SCHAR_MIN			-128
+#define UCHAR_MAX			0xFFU
+
+#define SHRT_MAX			0x7FFF
+#define SHRT_MIN			((int)0x8000)
+#define USHRT_MAX			0xFFFFU
+
+#define INT_MAX				0x7FFF
+#define INT_MIN				((int)0x8000)
+#define UINT_MAX			0xFFFFU
+
+#define LONG_MAX			0x7FFFFFFFL
+#define LONG_MIN			((long)0x80000000L)
+#define ULONG_MAX			0xFFFFFFFFUL
+/*	math.h
+
+	Definitions for the math floating point package.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#ifndef  _MATH_H
+#define  _MATH_H 1
+
+#define EDOM	33		/* Math argument */
+#define ERANGE	34		/* Result too large */
+
+#define HUGE_VAL	_huge_dble
+extern double _Cdecl _huge_dble;
+
+int	_Cdecl abs   (int x);
+double	_Cdecl acos  (double x);
+double	_Cdecl asin  (double x);
+double	_Cdecl atan  (double x);
+double	_Cdecl atan2 (double y, double x);
+double	_Cdecl atof  (const char *s);
+double	_Cdecl ceil  (double x);
+double	_Cdecl cos   (double x);
+double	_Cdecl cosh  (double x);
+double	_Cdecl exp   (double x);
+double	_Cdecl fabs  (double x);
+double	_Cdecl floor (double x);
+double	_Cdecl fmod  (double x, double y);
+double	_Cdecl frexp (double x, int *exponent);
+long	_Cdecl labs  (long x);
+double	_Cdecl ldexp (double x, int exponent);
+double	_Cdecl log   (double x);
+double	_Cdecl log10 (double x);
+double	_Cdecl modf  (double x, double *ipart);
+double	_Cdecl pow   (double x, double y);
+double	_Cdecl sin   (double x);
+double	_Cdecl sinh  (double x);
+double	_Cdecl sqrt  (double x);
+double	_Cdecl tan   (double x);
+double	_Cdecl tanh  (double x);
+
+struct	exception 
+{
+	int	type;
+	char   *name;
+	double	arg1, arg2, retval;
+};
+
+int _Cdecl matherr (struct exception *e);
+
+#if !__STDC__
+double	cdecl hypot (double x, double y);
+double	cdecl poly  (double x, int degree, double coeffs []);
+double	cdecl pow10 (int p);
+
+struct complex	    /* as used by "cabs" function */
+{
+    double  x, y;
+};
+
+#define cabs(z)     (hypot ((z).x, (z).y))
+
+/*  The customary matherr() exception handler for maths functions is
+    not compatible with the x3j11 draft standard for C.  _matherr() is
+    provided as a compromise.
+*/
+
+typedef enum
+{
+    DOMAIN = 1,    /* argument domain error -- log (-1)        */
+    SING,	   /* argument singularity  -- pow (0,-2))     */
+    OVERFLOW,	   /* overflow range error  -- exp (1000)      */
+    UNDERFLOW,	   /* underflow range error -- exp (-1000)     */
+    TLOSS,	   /* total loss of significance -- sin(10e70) */
+    PLOSS,	   /* partial loss of signif. -- not used      */
+}   _mexcep;
+
+double _Cdecl _matherr (_mexcep why, char *fun, double  *arg1p,
+			double  *arg2p, double  retval);
+
+/* Constants rounded for 21 decimals. */
+#define M_E		2.71828182845904523536
+#define M_LOG2E		1.44269504088896340736
+#define M_LOG10E	0.434294481903251827651
+#define M_LN2		0.693147180559945309417
+#define M_LN10		2.30258509299404568402
+#define M_PI		3.14159265358979323846
+#define M_PI_2		1.57079632679489661923
+#define M_PI_4		0.785398163397448309116
+#define M_1_PI		0.318309886183790671538
+#define M_2_PI		0.636619772367581343076
+#define M_1_SQRTPI	0.564189583547756286948
+#define M_2_SQRTPI	1.12837916709551257390
+#define M_SQRT2		1.41421356237309504880
+#define M_SQRT_2	0.707106781186547524401
+
+#endif	/* __STDC__ */
+
+#endif
+/*	mem.h
+
+	Memory manipulation functions
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#ifndef _STDDEF
+#define _STDDEF
+#ifndef _PTRDIFF_T
+#define _PTRDIFF_T
+#if	defined(__LARGE__) || defined(__HUGE__) || defined(__COMPACT__)
+typedef long	ptrdiff_t;
+#else
+typedef int	ptrdiff_t;
+#endif
+#endif
+#ifndef _SIZE_T
+#define _SIZE_T
+typedef unsigned size_t;
+#endif
+#endif
+
+#ifndef NULL
+#if defined(__TINY__) || defined(__SMALL__) || defined(__MEDIUM__)
+#define NULL	0
+#else
+#define NULL	0L
+#endif
+#endif
+
+void	*_Cdecl  memccpy(void *dest, const void *src, int c, size_t n);
+void	*_Cdecl  memchr	(const void *s, int c, size_t n);
+int	 _Cdecl  memcmp	(const void *s1, const void *s2, size_t n);
+void	*_Cdecl  memcpy	(void *dest, const void *src, size_t n);
+int	 _Cdecl  memicmp	(const void *s1, const void *s2, size_t n);
+void	*_Cdecl  memmove	(void *dest, const void *src, size_t n);
+void	*_Cdecl  memset	(void *s, int c, size_t n);
+void	 _Cdecl  movedata	(unsigned srcseg, unsigned srcoff, unsigned dstseg,
+					 unsigned dstoff, size_t n);
+void	 _Cdecl  movmem	(void *src, void *dest, unsigned length);
+void	 _Cdecl  setmem	(void *dest, unsigned length, char value);
+/*	process.h
+
+	Symbols and structures for process management.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+/*  Modes available as first argument to the spawnxx functions. */
+
+#define P_WAIT	  0	/* child runs separately, parent waits until exit */
+#define P_NOWAIT  1	/* both concurrent -- not implemented */
+#define P_OVERLAY 2	/* child replaces parent, parent no longer exists */
+
+
+/*  MSDOS does not have any abstract identifier for a process, but the
+    process Program Segment Prefix location provides a similar token.
+*/
+
+#ifndef _psp
+extern	unsigned _Cdecl _psp;	 /* provided unconditionally in dos.h */
+#endif
+
+#define  getpid()   (_psp)
+
+void	_Cdecl abort(void);
+int	_Cdecl execl(char *path, char *arg0, ...);
+int	_Cdecl execle(char *path, char *arg0, ...);
+int	_Cdecl execlp(char *path, char *arg0, ...);
+int	_Cdecl execlpe(char *path, char *arg0, ...);
+int	_Cdecl execv(char *path, char *argv[]);
+int	_Cdecl execve(char *path, char *argv[], char **env);
+int	_Cdecl execvp(char *path, char *argv[]);
+int	_Cdecl execvpe(char *path, char *argv[], char **env);
+void	_Cdecl exit(int status);
+void	_Cdecl _exit(int status);
+int	_Cdecl spawnl(int mode, char *path, char *arg0, ...);
+int	_Cdecl spawnle(int mode, char *path, char *arg0, ...);
+int	_Cdecl spawnlp(int mode, char *path, char *arg0, ...);
+int	_Cdecl spawnlpe(int mode, char *path, char *arg0, ...);
+int	_Cdecl spawnv(int mode, char *path, char *argv[]);
+int	_Cdecl spawnve(int mode, char *path, char *argv[], char **env);
+int	_Cdecl spawnvp(int mode, char *path, char *argv[]);
+int	_Cdecl spawnvpe(int mode, char *path, char *argv[], char **env);
+int	_Cdecl system(const char *command);
+
+/*	setjmp.h
+
+	Defines typedef and functions for setjmp/longjmp.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#ifndef _SETJMP
+#define _SETJMP
+typedef struct {
+	unsigned	j_sp;
+	unsigned	j_ss;
+	unsigned	j_flag;
+	unsigned	j_cs;
+	unsigned	j_ip;
+	unsigned	j_bp;
+	unsigned	j_di;
+	unsigned	j_es;
+	unsigned	j_si;
+	unsigned	j_ds;
+}	jmp_buf[1];
+
+void	_Cdecl longjmp(jmp_buf jmpb, int retval);
+int	_Cdecl setjmp(jmp_buf jmpb);
+#endif
+
+/*	stdarg.h
+
+	Definitions for accessing parameters in functions that accept
+	a variable number of arguments.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#if	!defined(__STDARG)
+#define __STDARG
+
+typedef void	*va_list;
+
+#define va_start(ap, parmN)	(ap = ...)
+#define va_arg(ap, type)	(*((type *)(ap))++)
+#define va_end(ap)
+#define _va_ptr			(...)
+#endif
+/*      signal.h
+  
+        Definitions for ANSI defined signaling capability
+
+        Copyright (c) Borland International 1988
+        All Rights Reserved.
+*/
+
+#ifndef __SIGNAL_H
+#define __SIGNAL_H
+
+
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+typedef int	sig_atomic_t; 	/* Atomic entity type (ANSI) */
+
+#define SIG_DFL ((void (* _Cdecl)(int))0)	/* Default action	*/
+#define SIG_IGN ((void (* _Cdecl)(int))1)	/* Ignore action	*/
+
+#ifdef __OS2__
+#define SIG_SGE ((void (* _Cdecl)(int))3)	/* Signal gets error	*/
+#define SIG_ACK ((void (* _Cdecl)(int))4)	/* Signal acknowlege	*/
+#endif
+
+#define SIG_ERR ((void (* _Cdecl)(int))-1)	/* Error return		*/
+
+#define SIGABRT	22
+#define SIGFPE	8		/* Floating point trap	*/
+#define SIGILL	4		/* Illegal instruction	*/
+#define SIGINT	2
+#define SIGSEGV	11		/* Memory access violation */
+#define SIGTERM	15
+
+#ifdef __OS2__
+#define SIGBREAK	21	/* OS/2 Ctrl-Brk signal	*/
+#define SIGUSR1		16	/* OS/2 process flag A	*/
+#define SIGUSR2		17	/* OS/2 process flag B	*/
+#define SIGUSR3		20	/* OS/2 process flag C	*/
+#endif
+
+int	_Cdecl raise(int sig);
+void	(* _Cdecl signal(int sig, void (*func)(/* int */))) (int);
+
+#endif
+/*	stddef.h
+
+	Definitions for common types, NULL, and errno.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#ifndef _STDDEF
+#define _STDDEF
+#ifndef _PTRDIFF_T
+#define _PTRDIFF_T
+#if	defined(__LARGE__) || defined(__HUGE__) || defined(__COMPACT__)
+typedef long	ptrdiff_t;
+#else
+typedef int	ptrdiff_t;
+#endif
+#endif
+#ifndef _SIZE_T
+#define _SIZE_T
+typedef unsigned size_t;
+#endif
+
+#ifndef NULL
+#if defined(__TINY__) || defined(__SMALL__) || defined(__MEDIUM__)
+#define NULL	0
+#else
+#define NULL	0L
+#endif
+#endif
+
+extern	int	_Cdecl errno;
+
+#endif
+/*      stdio.h
+
+        Definitions for stream input/output.
+
+        Copyright (c) Borland International 1987,1988
+        All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl  cdecl
+#endif
+
+#if     !defined(__STDIO_DEF_)
+#define __STDIO_DEF_
+
+#ifndef _SIZE_T
+#define _SIZE_T
+typedef unsigned size_t;
+#endif
+#ifndef NULL
+#   if defined(__TINY__) || defined(__SMALL__) || defined(__MEDIUM__)
+#   define      NULL    0
+#   else
+#   define      NULL    0L
+#   endif
+#endif
+
+#if     !defined(__STDARG)
+#include        <stdarg.h>
+#endif
+
+/* Definition of the file position type
+*/
+typedef long    fpos_t;
+
+/* Definition of the control structure for streams
+*/
+typedef struct  {
+        short           level;          /* fill/empty level of buffer */
+        unsigned        flags;          /* File status flags    */
+        char            fd;             /* File descriptor      */
+        unsigned char   hold;           /* Ungetc char if no buffer */
+        short           bsize;          /* Buffer size          */
+        unsigned char   *buffer;        /* Data transfer buffer */
+        unsigned char   *curp;          /* Current active pointer */
+        unsigned        istemp;         /* Temporary file indicator */
+        short           token;          /* Used for validity checking */
+}       FILE;                           /* This is the FILE object */
+
+/* Bufferisation type to be used as 3rd argument for "setvbuf" function
+*/
+#define _IOFBF  0
+#define _IOLBF  1
+#define _IONBF  2
+
+/*      "flags" bits definitions
+*/
+#define _F_RDWR 0x0003                  /* Read/write flag      */
+#define _F_READ 0x0001                  /* Read only file       */
+#define _F_WRIT 0x0002                  /* Write only file      */
+#define _F_BUF  0x0004                  /* Malloc'ed Buffer data */
+#define _F_LBUF 0x0008                  /* line-buffered file   */
+#define _F_ERR  0x0010                  /* Error indicator      */
+#define _F_EOF  0x0020                  /* EOF indicator        */
+#define _F_BIN  0x0040                  /* Binary file indicator */
+#define _F_IN   0x0080                  /* Data is incoming     */
+#define _F_OUT  0x0100                  /* Data is outgoing     */
+#define _F_TERM 0x0200                  /* File is a terminal   */
+
+/* End-of-file constant definition
+*/
+#define EOF     (-1)                    /* End of file indicator */
+
+/* Number of files that can be open simultaneously
+*/
+#define OPEN_MAX 20                     /* Total of 20 open files */
+#define SYS_OPEN 20
+
+/* Default buffer size use by "setbuf" function
+*/
+#define BUFSIZ  512                     /* Buffer size for stdio */
+
+/* Size of an arry large enough to hold a temporary file name string
+*/
+#define L_ctermid       5               /* CON: plus null byte */
+#define L_tmpnam        13              /* tmpnam buffer size */
+
+/* Constants to be used as 3rd argument for "fseek" function
+*/
+#define SEEK_CUR        1
+#define SEEK_END        2
+#define SEEK_SET        0
+
+/* Number of unique file names that shall be generated by "tmpnam" function
+*/
+#define TMP_MAX         0xFFFF
+
+/* Standard I/O predefined streams
+*/
+extern  FILE    _Cdecl _streams[];
+
+#define stdin   (&_streams[0])
+#define stdout  (&_streams[1])
+#define stderr  (&_streams[2])
+#define stdaux  (&_streams[3])
+#define stdprn  (&_streams[4])
+
+void     _Cdecl clearerr (FILE *stream);
+int      _Cdecl fclose   (FILE *stream);
+int      _Cdecl fflush   (FILE *stream);
+int      _Cdecl fgetc    (FILE *stream);
+int      _Cdecl fgetpos  (FILE *stream, fpos_t *pos);
+char    *_Cdecl fgets    (char *s, int n, FILE *stream);
+FILE    *_Cdecl fopen    (const char *path, const char *mode);
+int      _Cdecl fprintf  (FILE *stream, const char *format, ...);
+int      _Cdecl fputc    (int c, FILE *stream);
+int      _Cdecl fputs    (const char *s, FILE *stream);
+size_t   _Cdecl fread    (void *ptr, size_t size, size_t n, FILE *stream);
+FILE    *_Cdecl freopen  (const char *path, const char *mode, 
+                          FILE *stream);
+int      _Cdecl fscanf   (FILE *stream, const char *format, ...);
+int      _Cdecl fseek    (FILE *stream, long offset, int whence);
+int      _Cdecl fsetpos  (FILE *stream, const fpos_t *pos);
+long     _Cdecl ftell    (FILE *stream);
+size_t   _Cdecl fwrite   (const void *ptr, size_t size, size_t n,
+                          FILE *stream);
+char    *_Cdecl gets     (char *s);
+void     _Cdecl perror   (const char *s);
+int      _Cdecl printf   (const char *format, ...);
+int      _Cdecl puts     (const char *s);
+int      _Cdecl rename   (const char *oldname, const char *newname);
+void     _Cdecl rewind   (FILE *stream);
+int      _Cdecl scanf    (const char *format, ...);
+void     _Cdecl setbuf   (FILE *stream, char *buf);
+int      _Cdecl setvbuf  (FILE *stream, char *buf, int type, size_t size);
+int      _Cdecl sprintf  (char *buffer, const char *format, ...);
+int      _Cdecl sscanf   (const char *buffer, const char *format, ...);
+char    *_Cdecl strerror (int errnum);
+FILE    *_Cdecl tmpfile  (void);
+char    *_Cdecl tmpnam   (char *s);
+int      _Cdecl ungetc   (int c, FILE *stream);
+int      _Cdecl vfprintf (FILE *stream, const char *format, va_list arglist);
+int      _Cdecl vfscanf  (FILE *stream, const char *format, va_list arglist);
+int      _Cdecl vprintf  (const char *format, va_list arglist);
+int      _Cdecl vscanf   (const char *format, va_list arglist);
+int      _Cdecl vsprintf (char *buffer, const char *format, va_list arglist);
+int      _Cdecl vsscanf  (const char *buffer, const char *format, va_list arglist);
+
+#if !__STDC__
+int      _Cdecl fcloseall(void);
+FILE    *_Cdecl fdopen   (int handle, char *type);
+int      _Cdecl fgetchar (void);
+int      _Cdecl flushall (void);
+int      _Cdecl fputchar (int c);
+int      _Cdecl getw     (FILE *stream);
+int      _Cdecl putw     (int w, FILE *stream);
+char    *_Cdecl _strerror(const char *s);
+int      _Cdecl unlink   (const char *path);
+
+#endif
+
+int      _Cdecl _fgetc   (FILE *stream);             /* used by getc() macro */
+int      _Cdecl _fputc   (char c, FILE *stream);     /* used by putc() macro */
+
+/*      The following macros provide for common functions */
+
+#define ferror(f)       ((f)->flags & _F_ERR)
+#define feof(f)         ((f)->flags & _F_EOF)
+#define fileno(f)       ((f)->fd)
+#define remove(path)    unlink(path)
+
+#define getc(f) \
+  ((--((f)->level) >= 0) ? (unsigned char)(++(f)->curp)[-1] : \
+	_fgetc (f))
+#define putc(c,f) \
+  ((++((f)->level) < 0) ? (unsigned char)((++(f)->curp)[-1]=(c)) : \
+	_fputc ((c),f))
+
+#define getchar()  getc(stdin)
+#define putchar(c) putc((c), stdout)
+
+#define ungetc(c,f)     ungetc((c),f)   /* traditionally a macro */
+
+#endif
+
+/*      stdlib.h
+
+        Definitions for common types, variables, and functions.
+
+        Copyright (c) Borland International 1987,1988
+        All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl  cdecl
+#endif
+
+#if     !defined(__STDLIB)
+#define __STDLIB
+
+#ifndef _SIZE_T
+#define _SIZE_T
+typedef unsigned size_t;
+#endif
+
+#ifndef _DIV_T
+#define _DIV_T
+typedef struct {
+        int     quot;
+        int     rem;
+} div_t;
+#endif
+
+#ifndef _LDIV_T
+#define _LDIV_T
+typedef struct {
+        long    quot;
+        long    rem;
+} ldiv_t;
+#endif
+
+#define EXIT_SUCCESS 0
+#define EXIT_FAILURE 1
+
+/* Maximum value returned by "rand" function
+*/
+#define RAND_MAX 0x7FFF
+
+typedef void _Cdecl (* atexit_t)(void);
+
+void    _Cdecl abort  (void);
+int     _Cdecl abs    (int x);
+int     _Cdecl atexit (atexit_t func);
+double  _Cdecl atof   (const char *s);
+int     _Cdecl atoi   (const char *s);
+long    _Cdecl atol   (const char *s);
+void   *_Cdecl bsearch(const void *key, const void *base, 
+                       size_t nelem, size_t width,
+                       int _Cdecl (*fcmp)(/* const void *, const void * */));
+void   *_Cdecl calloc (size_t nitems, size_t size);
+div_t   _Cdecl div    (int numer, int denom);
+void    _Cdecl exit   (int status);
+void    _Cdecl free   (void *block);
+char   *_Cdecl getenv (const char *name);
+long    _Cdecl labs   (long x);
+ldiv_t  _Cdecl ldiv   (long numer, long denom);
+void   *_Cdecl malloc (size_t size);
+void    _Cdecl qsort  (void *base, size_t nelem, size_t width,
+                       int _Cdecl (*fcmp)(/* const void *, const void * */));
+int     _Cdecl rand   (void);
+void   *_Cdecl realloc(void *block, size_t size);
+void    _Cdecl srand  (unsigned seed);
+double  _Cdecl strtod (const char *s, char **endptr);
+long    _Cdecl strtol (const char *s, char **endptr, int radix);
+unsigned long _Cdecl strtoul (const char *s, char **endptr, int radix);
+int     _Cdecl system (const char *command);
+
+#if !__STDC__
+
+#ifndef NULL
+#if defined(__TINY__) || defined(__SMALL__) || defined(__MEDIUM__)
+#define NULL    0
+#else
+#define NULL    0L
+#endif
+#endif
+
+/* Variables */
+extern  int             _Cdecl _doserrno;
+extern  char          **_Cdecl environ;
+extern  int             _Cdecl errno;
+extern  int             _Cdecl _fmode;
+extern  unsigned char   _Cdecl _osmajor;
+extern  unsigned char   _Cdecl _osminor;
+extern  unsigned        _Cdecl _psp;
+extern  char           *_Cdecl sys_errlist[];
+extern  int             _Cdecl sys_nerr;
+extern  unsigned int    _Cdecl _version;
+
+int     _Cdecl __abs__(int x);          /* This is an in-line function */
+#define abs(x)          __abs__(x)
+#define atoi(s)         ((int) atol (s))
+
+#define max(a,b)        (((a) > (b)) ? (a) : (b))
+#define min(a,b)        (((a) < (b)) ? (a) : (b))
+
+#define random(num)     (rand() % (num))
+#define randomize()     srand((unsigned)time(NULL))
+
+char   *_Cdecl ecvt     (double value, int ndig, int *dec, int *sign);
+void    _Cdecl _exit    (int status);
+char   *_Cdecl fcvt     (double value, int ndig, int *dec, int *sign);
+char   *_Cdecl gcvt     (double value, int ndec, char *buf);
+char   *_Cdecl itoa     (int value, char *string, int radix);
+void   *_Cdecl lfind    (const void *key, const void *base, 
+                         size_t *num, size_t width,
+                         int _Cdecl (*fcmp)(/* const void *, const void * */));
+
+unsigned long _Cdecl _lrotl(unsigned long val, int count);
+unsigned long _Cdecl _lrotr(unsigned long val, int count);
+
+void   *_Cdecl lsearch  (const void *key, void *base, 
+                         size_t *num, size_t width, 
+                         int _Cdecl (*fcmp)(/* const void *, const void * */));
+char   *_Cdecl ltoa     (long value, char *string, int radix);
+int     _Cdecl putenv   (const char *name);
+
+unsigned _Cdecl _rotl   (unsigned value, int count);
+unsigned _Cdecl _rotr   (unsigned value, int count);
+
+void    _Cdecl swab     (char *from, char *to, int nbytes);
+char   *_Cdecl ultoa    (unsigned long value, char *string, int radix);
+#endif
+
+#endif
+/*	string.h
+
+	Definitions for memory and string functions.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#ifndef _SIZE_T
+#define _SIZE_T
+typedef unsigned size_t;
+#endif
+
+void	*_Cdecl memccpy	(void *dest, const void *src, int c, size_t n);
+void	*_Cdecl memchr	(const void *s, int c, size_t n);
+int	 _Cdecl memcmp	(const void *s1, const void *s2, size_t n);
+void	*_Cdecl memcpy	(void *dest, const void *src, size_t n);
+int	 _Cdecl memicmp	(const void *s1, const void *s2, size_t n);
+void	*_Cdecl memmove	(void *dest, const void *src, size_t n);
+void	*_Cdecl memset	(void *s, int c, size_t n);
+void	 _Cdecl movedata(unsigned srcseg, unsigned srcoff, unsigned dstseg,
+			 unsigned dstoff, size_t n);
+char	*_Cdecl stpcpy	(char *dest, const char *src);
+char	*_Cdecl strcat	(char *dest, const char *src);
+char	*_Cdecl strchr	(const char *s, int c);
+int	 _Cdecl strcmp	(const char *s1, const char *s2);
+char	*_Cdecl strcpy	(char *dest, const char *src);
+size_t	 _Cdecl strcspn	(const char *s1, const char *s2);
+char	*_Cdecl strdup	(const char *s);
+char	*_Cdecl strerror(int errnum);
+int	 _Cdecl stricmp	(const char *s1, const char *s2);
+size_t	 _Cdecl strlen	(const char *s);
+char	*_Cdecl strlwr	(char *s);
+char	*_Cdecl strncat	(char *dest, const char *src, size_t maxlen);
+int	 _Cdecl strncmp	(const char *s1, const char *s2, size_t maxlen);
+char	*_Cdecl strncpy	(char *dest, const char *src, size_t maxlen);
+int	 _Cdecl strnicmp(const char *s1, const char *s2, size_t maxlen);
+char	*_Cdecl strnset	(char *s, int ch, size_t n);
+char	*_Cdecl strpbrk	(const char *s1, const char *s2);
+char	*_Cdecl strrchr	(const char *s, int c);
+char	*_Cdecl strrev	(char *s);
+char	*_Cdecl strset	(char *s, int ch);
+size_t	 _Cdecl strspn	(const char *s1, const char *s2);
+char	*_Cdecl strstr	(const char *s1, const char *s2);
+char	*_Cdecl strtok	(char *s1, const char *s2);
+char	*_Cdecl strupr	(char *s);
+
+/* compatibility with other compilers */
+
+#define strcmpi(s1,s2)		stricmp(s1,s2)
+#define strncmpi(s1,s2,n)	strnicmp(s1,s2,n)
+
+#if !__STDC__
+char	*_Cdecl _strerror (const char *s);
+#endif
+/*	time.h
+
+	Struct and function declarations for dealing with time.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#ifndef _TM_DEFINED
+#define _TM_DEFINED
+
+#ifndef  __TIME_T
+#define  __TIME_T
+typedef long	time_t;
+#endif
+
+#ifndef  __CLOCK_T
+#define  __CLOCK_T
+typedef long clock_t;
+#define CLK_TCK 18.2
+#endif
+
+struct	tm	{
+	int	tm_sec;
+	int	tm_min;
+	int	tm_hour;
+	int	tm_mday;
+	int	tm_mon;
+	int	tm_year;
+	int	tm_wday;
+	int	tm_yday;
+	int	tm_isdst;
+};
+
+char	*_Cdecl	asctime	(const struct tm *tblock);
+char	*_Cdecl	ctime	(const time_t *time);
+double	 _Cdecl	difftime(time_t time2, time_t time1);
+struct tm *_Cdecl gmtime(const time_t *timer);
+struct tm *_Cdecl localtime(const time_t *timer);
+time_t	 _Cdecl	time	(time_t *timer);
+clock_t _Cdecl clock(void);
+
+#if !__STDC__
+extern int	_Cdecl daylight;
+extern long	_Cdecl timezone;
+
+int	_Cdecl stime(time_t *tp);
+void	_Cdecl tzset(void);
+#endif
+
+#endif
+/*	values.h
+
+	Symbolic names for important constants, including machine
+	dependencies. A System V compatible header.
+
+	Copyright (c) Borland International 1987,1988
+	All Rights Reserved.
+*/
+#if __STDC__
+#define _Cdecl
+#else
+#define _Cdecl	cdecl
+#endif
+
+#ifndef _VALUES_H
+#define	_VALUES_H
+ 
+#define BITSPERBYTE	8
+#define MAXSHORT	0x7FFF
+#define MAXINT		0x7FFF
+#define MAXLONG		0x7FFFFFFFL
+#define HIBITS		0x8000
+#define HIBITI		0x8000
+#define HIBITL		0x80000000
+ 
+#define DMAXEXP		308
+#define FMAXEXP		38
+#define DMINEXP		-307
+#define FMINEXP		-37
+ 
+#define MAXDOUBLE	1.797693E+308
+#define MAXFLOAT	3.37E+38
+#define MINDOUBLE	2.225074E-308
+#define MINFLOAT	8.43E-37
+ 
+#define DSIGNIF		53
+#define FSIGNIF		24
+ 
+#define DMAXPOWTWO	0x3FF
+#define FMAXPOWTWO	0x7F
+#define _DEXPLEN	11
+#define _FEXPLEN	8
+#define _EXPBASE	2
+#define _IEEE		1
+#define _LENBASE	1
+#define HIDDENBIT	1
+#define LN_MAXDOUBLE	7.0978E+2
+#define LN_MINDOUBLE	-7.0840E+2
+ 
+#endif
+
+
+/* send the cursor to specified X, Y coordinates */
+extern void goto_xy(int x, int y);
+
+/* return the 16_bit scan code for keyboard.  */
+extern readkey(void);
+
+/* Clear the screen. */
+extern void clr_window(int x1, int y1,int x2, int y2);
+
+/* returns the current video mode */
+extern video_mode(void);
+
+
+
+
+
+ typedef char string[20];
+
+ void Initializer(void);
+ void Curs_move(void);
+ void Option(void);
+ void Putpoint(int x, int y, int color);
+ void Linem(int startx, int starty, int endx, int endy, int color);
+ void Palette(int pnum);
+ void Mode(int mode_code);
+ void Xhairs(int x, int y);
+ void Goto_xy(int x, int y);
+ int Screen_info(int on_flag, int erase_flag);
+ void Eraser(int x, int y,char extra);
+ int Screen_save(void);
+ void Prev_screen(void);
+ int Readkey(void);
+ void Menu(void);
+ void Move(char);
+ char *Read_string(void);
+ void Save(void);
+ void Mess(char []);
+ void Load(void);
+ void Help(void);
+ void New(void);
+ int Menu_load(void);
+ void Move_load(char);
+ int Help_on_help(void);
+
+ void Print_buf(void);
+ void Set_graphics(int cols, char density);
+ void Reset_prn(void);
+ void Print(char ch);
+
+ string str[6] = {
+		    "Save",
+		    "Load",
+		    "New",
+		    "Print",
+		    "Help",
+		    "Quit"
+		 };
+ typedef struct point{
+	      char name[13];
+	      struct point *back;
+	      struct point *front;
+	      } pointer;
+ pointer *listb, *listf, *ptr1, *ptr2;
+
+ int elem_no = 0, felem_no = 0;
+ char s[10],s1[2];
+ int load_flag = 1;
+ union k{
+	    char c[2];
+	    int i;
+	  } key;
+
+ int x = 100, y = 100;
+ int cc = 1, j;
+ int on_flag = 1, erase_flag = 0;
+ int inc = 1;
+
+
+#include <stdio.h>
+#include <conio.h>
+#include <ctype.h>
+#include <dos.h>
+#include <math.h>
+#include <graphics.h>
+#include <dir.h>
+
+ typedef char string[20];
+
+ void Initializer(void);
+ void Curs_move(void);
+ void Option(void);
+ void Putpoint(int x, int y, int color);
+ void Linem(int startx, int starty, int endx, int endy, int color);
+ void Palette(int pnum);
+ void Mode(int mode_code);
+ void Xhairs(int x, int y);
+ void Goto_xy(int x, int y);
+ int Screen_info(int on_flag, int erase_flag);
+ void Eraser(int x, int y,char extra);
+ int Screen_save(void);
+ void Prev_screen(void);
+ int Readkey(void);
+ void Menu(void);
+ void Move(char);
+ char *Read_string(void);
+ void Save(void);
+ void Mess(char []);
+ void Load(void);
+ void Help(void);
+ void New(void);
+ int Menu_load(void);
+ void Move_load(char);
+ int Help_on_help(void);
+
+ void Print_buf(void);
+ void Set_graphics(int cols, char density);
+ void Reset_prn(void);
+ void Print(char ch);
+
+ string str[6] = {
+		    "Save",
+		    "Load",
+		    "New",
+		    "Print",
+		    "Help",
+		    "Quit"
+		 };
+ typedef struct point{
+	      char name[13];
+	      struct point *back;
+	      struct point *front;
+	      } pointer;
+ pointer *listb, *listf, *ptr1, *ptr2;
+
+ int elem_no = 0, felem_no = 0;
+ char s[10],s1[2];
+ int load_flag = 1;
+ union k{
+	    char c[2];
+	    int i;
+	  } key;
+
+ int x = 100, y = 100;
+ int cc = 1, j;
+ int on_flag = 1, erase_flag = 0;
+ int inc = 1;
+#include <conio.h>
+#include <dos.h>
+#include <stdio.h>
+
+/* send the cursor to specified X, Y coordinates */
+extern void goto_xy(int x, int y);
+
+/* return the 16_bit scan code for keyboard.  */
+extern readkey(void);
+
+/* Clear the screen. */
+extern void clr_window(int x1, int y1,int x2, int y2);
+
+/* returns the current video mode */
+extern video_mode(void);

@@ -1,0 +1,75 @@
+#include<stdio.h>
+#include<conio.h>
+
+int data[100],rawdata;
+
+int h(int i){
+	return(i % 101);
+}
+int rh(int i){
+	return((i+1) % 101);
+}
+void insert(int d){
+	int j;
+	j=h(d);
+	if (data[j]==d){
+		printf("Duplicate\n");
+		getch();
+		exit(1);
+	}
+	if (data[j]==0)
+		data[j]=d;
+	else
+		{
+			j=rh(d);
+               if (data[j]==0)
+				data[j]=d;
+			else
+				printf("Overflow");
+		}
+}
+
+void insertinhash(){
+	int k;
+
+	for (k=0;k<=5;k++){
+		printf("Enter a data  ");
+		scanf("%d",&rawdata);
+		insert(rawdata);
+	}
+
+}
+
+void searchinhash(){
+	int k;
+	rawdata=0;
+
+	do {
+		printf("Enter earch data  ");
+		scanf("%d",&rawdata);
+		k=h(rawdata);
+
+		if (data[k]==rawdata)
+			printf("found\n");
+		else if (data[rh(rawdata)]==rawdata)
+			printf("Found\n");
+		else
+			printf("Not found\n");
+	} while (rawdata!=0);
+
+}
+
+void inidata(){
+	int l;
+	for (l=0;l<100;l++){
+		data[l]=0;
+	}
+}
+
+main(){
+	clrscr();
+	inidata();
+	insertinhash();
+	searchinhash();
+	getch();
+}
