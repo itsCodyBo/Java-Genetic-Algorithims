@@ -8,14 +8,14 @@ public class DrawJGraph {
 
 	public static void main(String[] args) {
 
-		BufferedImage img = new BufferedImage(720, 480, BufferedImage.TYPE_INT_RGB);
+	BufferedImage img = new BufferedImage(720, 480, BufferedImage.TYPE_INT_RGB);
 
         Graphics2D g2d = img.createGraphics();
         g2d.setBackground(Color.WHITE);  // Creating a white background
         g2d.fillRect(0, 0, 720, 480);
 
         g2d.setColor(Color.RED);
-        g2d.drawLine(10, 5, 350, 320);   // Draw line #1 with RED color
+        g2d.drawLine(20, 5, 100, 100);   // Draw line #1 with RED color
 
         g2d.setColor(Color.BLUE);        // Draw a BLUE colored circle
         g2d.drawOval(100, 50, 200, 200); //Oval (X, Y, r, r) => Cirle [Note: Draws the outline of an oval. The result is a circle or ellipse that fits within the rectangle specified by the x, y, width, and height arguments.]
