@@ -1,32 +1,135 @@
 import java.util.Arrays;
+import java.util.Random;
 
 public class ProteinFolder {
+
+	//3d array of 200 64rowx2column 2d arrays
+	int[][][] population = new int[200][64][2];
+
+	//variables to use in methods
+	int validFolding;
 	
 
+	public void RandomOrientation () {
 
-	public void fillArray (int[][] arrayToFill) {
+		//these are the variables we will need for the protein foling random orientation 
+		int previousDirection, presentDirection;
+		int X, Y;
 
-		for (int i = 0; i < arrayToFill.length; i++) {
+		//random int for selection
+		Random rn = new Random();
 
-   			for (int j = 0; j < arrayToFill[i].length; j++) {
 
-   				if (Math.random() < 0.5) {
+		//the variable we will use to keep track of our xy coordinates and fill our lists
+		//this says "for each chromosome we have" out of all 200
+		for (int i=0; i<population.length;i++) {
 
-					arrayToFill[i][j] = 0;
+			//set validFolding to true
+			validFolding = 1;
 
-				}//end if
+			//always fill the first two xy coordinates with these numbers
+			population[i][0][0] = 0;
+			population[i][0][1] = 0;
+			population[i][1][0] = 1;
+			population[i][1][1] = 0;
+			X = 1;
+			Y = 0;
+			//we always start off with a previous direction of 1
+			previousDirection = 1;
 
-				else {
-
-					arrayToFill[i][j] = -1;
+			//this says "for each row"
+			for (int j=3;j<population[i].length;j++){
 				
-				}//end else
+				//this says "for each column"
+				for (int k=0; k<population[j][k].length;k++){
+					
+					int selection = rn.nextInt(3);
 
-    		}//end inner for
 
-		}//end outer for
+					switch (previousDirection) {
 
-	}//end fillArray
+						case 1:
+							//To go forward again
+							if (selection == 1) {
+								X += 1;
+								previousDirection = 1;
+							}
+							//to go down
+							else if (selection == 2) {
+								Y += -1;
+								previousDirection = 2;
+							}
+							//to go up
+							else if (selection == 3) {
+								Y += 1;
+								previousDirection = 4;
+							}
+							break;
+						//if our last move was down	
+						case 2:
+							//To go forward again
+							if (selection == 1) {
+								X += 1;
+								previousDirection = 1;
+							}
+							//to go down
+							else if (selection == 2) {
+								Y += -1;
+								previousDirection = 2;
+							}
+							//to go left
+							else if (selection == 3) {
+								X += -1;
+								previousDirection = 3;
+							}
+							break;
+						case 3:
+							//To go up
+							if (selection == 1) {
+								Y += 1;
+								previousDirection = 4;
+							}
+							//to go down
+							else if (selection == 2) {
+								Y += -1;
+								previousDirection = 2;
+							}
+							//to go left again
+							else if (selection == 3) {
+								X += -1;
+								previousDirection = 3;
+							}
+							break;
+						case 4:
+
+							//To go forward (right) again
+							if (selection == 1) {
+								X += 1;
+								previousDirection = 1;
+							}
+							//to go left
+							else if (selection == 2) {
+								X += -1;
+								previousDirection = 3;
+							}
+							//to go up
+							else if (selection == 3) {
+								Y += 1;
+								previousDirection = 4;
+							}
+							break;
+
+		}//end switch statement
+
+				}//end k for
+
+			}//end j for
+
+		}//end i for
+
+		//first variable for the switch statement is direction, which will always be 1 to start out
+
+	}//end RandomOrientation
 
 	public void printArray(int[][] arrayToPrint){
 		for (int i=0; i<arrayToPrint.length; i++) {

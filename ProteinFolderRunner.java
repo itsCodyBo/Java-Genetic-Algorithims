@@ -5,17 +5,16 @@ public class ProteinFolderRunner {
 	
 	public static void main(String[] args) {
 
-			//fitness?
-			//initialize a 2 dimensional array
-			int[][] mainArray = new int[64][200];
+		int[][][] population = new int[200][64][2];
 
-			//intialize a copy of the array
-			int[][] copyArray = Arrays.copyOf(mainArray,mainArray.length);
+		System.out.println("Number of Subjects: " + population.length);
 
-			ProteinFolder proteinFolder = new ProteinFolder();
-			proteinFolder.fillArray(mainArray);
+		System.out.println("Number of Rows: " + population[1].length);
 
-			proteinFolder.printArray(mainArray);
+		System.out.println("Number of Columns: " + population[1][1].length);
+
+		int rand = (int) (Math.random() * 4) + 1;
+		System.out.println(rand);
 
 	}//end main
 
