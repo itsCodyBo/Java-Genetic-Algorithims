@@ -435,7 +435,7 @@ Function Mutation(i As Long, n As Integer) As Long
      
      id = CurrentPosNewPopulation
 
-     ' possible rotations 90ß,180ß,270ß
+     ' possible rotations 90ÃŸ,180ÃŸ,270ÃŸ
      '           index       1   2    3
      '
    

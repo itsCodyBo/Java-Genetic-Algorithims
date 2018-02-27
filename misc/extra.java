@@ -44,3 +44,61 @@
 
 
 		}
+
+
+
+
+
+
+
+
+
+					//if statement for first two - xy at 0 should be 0,0 and xy at 1 should be 1,0 so we always go forward first
+					if (j==0 && k==0){
+						population[i][j][k] = 0;
+					}
+					else if (j==0 && k==1){
+						population[i][j][k] = 0;
+					}
+					else if(j==1 && k==1){
+						population[i][j][k] = 1;
+					}
+					else if (j==1 && k==2){
+						population[i][j][k] = 0;
+					}
+
+					//this is where the case/switch statements come in to determine the next directions
+					else {
+
+
+
+
+
+
+
+
+
+					}//end final else inside k
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RandomOrientation
+
+
