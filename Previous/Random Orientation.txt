@@ -1,0 +1,54 @@
+Random Orientation {
+	
+
+	//while NOT A VALID ANSWER {
+
+		//For each population{
+
+			currentX=1;
+			currentY=0;
+			previousDirection = 1;
+			tempX;
+			tempY;
+			tempDirection;
+			int random;
+
+
+			//For each row in that population j {
+
+				//pick a new direction based on prev direction
+					random = previous choice
+					//add corresponding x or y to tempx or tempy
+					//update tempPD
+
+
+				//for each row up till j-1 (k){
+
+					//if k.getX == tempX and k.getY == tempY
+						//pick a new direction based on 5-random
+						//add corresponding x or y to tempx or tempy
+						//update tempPD	
+
+					else
+						k.setX == tempX
+						k.setY == tempY
+						previousDirection = tempDirection						
+				
+				}//end k rows
+
+			}//end j rows 
+
+
+
+
+
+
+		}//end population i	
+
+
+	}//END WHILE
+
+
+}//end random orientation
+
+

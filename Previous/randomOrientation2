@@ -1,0 +1,203 @@
+	//start RandomOrientation
+	public void RandomOrientation(){
+
+		//this says "for each chromosome in the population"
+		for (int i = 0; i<population.length;i++) {
+
+			//for each new chromosome, we should start out as previous direction being forward, or 1
+			int currentX = 1;
+			int currentY = 0;
+			int previousDirection = 1;
+			
+			//this says "for each row in that chromsome"
+			for (int j=2; j<population[i].getLength();j++){
+
+				//these are two temp values we will use to store x and y until we know we can use them
+				int tempX=currentX;
+				int tempY=currentY;
+				int tempDirection = previousDirection;
+
+
+				int selection = rn.nextInt(3);
+
+				//previous direction variable to handle case statements
+
+
+
+				//this is where your case statements should go - pick a direction and store the numbers to add in the temp x/y variables
+				switch (previousDirection) {
+
+						case 1:
+							//To go forward again
+							if (selection == 1) {
+								tempX += 1;
+								tempDirection = 1;
+							}
+							//to go down
+							else if (selection == 2) {
+								tempY += -1;
+								tempDirection = 2;
+							}
+							//to go up
+							else if (selection == 3) {
+								tempY += 1;
+								tempDirection = 4;
+							}
+							break;
+						//if our last move was down	
+						case 2:
+							//To go forward again
+							if (selection == 1) {
+								tempX += 1;
+								tempDirection = 1;
+							}
+							//to go down
+							else if (selection == 2) {
+								tempY += -1;
+								tempDirection = 2;
+							}
+							//to go left
+							else if (selection == 3) {
+								tempX += -1;
+								tempDirection = 3;
+							}
+							break;
+						case 3:
+							//To go up
+							if (selection == 1) {
+								tempY += 1;
+								tempDirection = 4;
+							}
+							//to go down
+							else if (selection == 2) {
+								tempY += -1;
+								tempDirection = 2;
+							}
+							//to go left again
+							else if (selection == 3) {
+								tempX += -1;
+								tempDirection = 3;
+							}
+							break;
+						case 4:
+
+							//To go forward (right) again
+							if (selection == 1) {
+								tempX += 1;
+								tempDirection = 1;
+							}
+							//to go left
+							else if (selection == 2) {
+								tempX += -1;
+								tempDirection = 3;
+							}
+							//to go up
+							else if (selection == 3) {
+								tempY += 1;
+								tempDirection = 4;
+							}
+							break;
+
+				}//end switch
+
+				/*
+				//after that, make a new for loop to go to j - 1 rows long
+				for (int k = 0; k<j-1;k++){
+					//use this to pick one of the two remaining selections 
+					int solver = 5;
+					int nextChoice = solver - tempDirection;
+
+					//check if duplicate and if so, pick another out of the remaining choices
+					if(population[k].getX(k) == tempX && population[k].getY(k)==tempY){
+						tempX = currentX;
+						tempY = currentY;
+
+						switch (previousDirection) {
+
+								case 1:
+									//To go forward again
+									if (nextChoice == 1) {
+										tempX += 1;
+										tempDirection = 1;
+									}
+									//to go down
+									else if (nextChoice == 2) {
+										tempY += -1;
+										tempDirection = 2;
+									}
+									//to go up
+									else if (nextChoice == 3) {
+										tempY += 1;
+										tempDirection = 4;
+									}
+									break;
+								//if our last move was down	
+								case 2:
+									//To go forward again
+									if (nextChoice == 1) {
+										tempX += 1;
+										tempDirection = 1;
+									}
+									//to go down
+									else if (nextChoice == 2) {
+										tempY += -1;
+										tempDirection = 2;
+									}
+									//to go left
+									else if (nextChoice == 3) {
+										tempX += -1;
+										tempDirection = 3;
+									}
+									break;
+								case 3:
+									//To go up
+									if (nextChoice == 1) {
+										tempY += 1;
+										tempDirection = 4;
+									}
+									//to go down
+									else if (nextChoice == 2) {
+										tempY += -1;
+										tempDirection = 2;
+									}	
+									//to go left again
+									else if (nextChoice == 3) {
+										tempX += -1;
+										tempDirection = 3;
+									}
+									break;
+								case 4:
+
+									//To go forward (right) again
+									if (nextChoice == 1) {
+										tempX += 1;
+										tempDirection = 1;
+									}
+									//to go left
+									else if (nextChoice == 2) {
+										tempX += -1;
+										tempDirection = 3;
+									}
+									//to go up
+									else if (nextChoice == 3) {
+										tempY += 1;
+										tempDirection = 4;
+									}
+									break;
+						}//end switch
+
+					}//end if
+
+				}//end for
+				*/
+
+				previousDirection = tempDirection;
+				currentX = tempX;
+				currentY = tempY;
+				population[j].setX(j,currentX);
+				population[j].setY(j,currentY);
+
+			}//end inner for(j)
+		
+		}//end outer for (i)
+	}//end RandomOrientation

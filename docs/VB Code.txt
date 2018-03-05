@@ -1,0 +1,592 @@
+' //////////////////////////////////////////////////////////////////
+' The code is in VB (version 6.0) developed by Md Tamjidul Hoque
+
+' Important Note: 
+' ===============
+' Don't try to run this code, rather try to get the idea, how each of the function is implemented.  
+' Partial codes are placed here to provide ideas (so don't assume they are complete)
+' Also, keep in mind that you may not need some of the lines. 
+
+' //////////////////////////////////////////////////////////////////
+
+'Declaration of the structure of the population of chromosomes
+
+Public Type genotype
+        Fitness As Integer
+        X(1 To 64) As Integer
+        Y(1 To 64) As Integer
+End Type
+
+Public population() As genotype         ' assume this is 1st population or, pop1
+Public newpopulation() As genotype      ' assume this is 1st population or, pop2
+
+'///////////////////////////////////////////////////////////////////////////////
+
+'/***********************************************************************/
+'* Fn: Initialization(void)   */
+Function Initialization()
+
+Dim i As Long
+Dim j As Long
+    For i = 1 To txtPopSize
+                         
+            ValidFolding = 0
+            RandomOrientation (i)
+            
+            While (ValidFolding = 0)
+             RandomOrientation (i)
+            Wend
+
+            population(i).Fitness = ComputeFullFitnessPopOnce(i)
+            
+            Next i
+            
+
+End Function
+'/////////////////////////////////////////////////////////////////////////////////////
+
+
+'* ***************************************************
+'Full Fitness Computation for nth newpopulation
+
+Function ComputeFullFitnessNewPop(n As Long) As Long
+
+Dim F, i, j, TestF, TestSeq As Long
+
+ F = 0
+    For i = 1 To txtHCount - 1
+            For j = i + 1 To txtHCount
+                    TestSeq = (Abs(HPModel(i) - HPModel(j))) '/*Not Sequential */
+                        If (TestSeq <> 1) Then
+                               TestF = Abs(newpopulation(n).X(HPModel(i)) - newpopulation(n).X(HPModel(j))) + Abs(newpopulation(n).Y(HPModel(i)) - newpopulation(n).Y(HPModel(j)))
+                                 If (TestF = 1) Then
+                                                F = F - 1
+                                  End If
+                         End If
+            Next j
+      Next i
+ 
+'newpopulation(n).Fitness = F
+ ComputeFullFitnessNewPop = F
+
+End Function
+'/////////////////////////////////////////////////////////////////////////////////////////////////
+
+'************************************************************/
+'* **********************************************************
+'CrossOver i,j = ith and jth polulation, n = cross point
+'First part of i and 2nd part of j.
+'Return: 1 => Success, 0=> Failure.
+
+'Call Style:
+'1st:         CurrentPosNewPopulation = CurrentPosNewPopulation + CrossOver(i, j, n)
+'2nd:         CurrentPosNewPopulation = CurrentPosNewPopulation + CrossOver(j, i, n)
+
+
+Function CrossOver(i As Long, j As Long, n As Integer) As Long
+
+ Dim PrevDirection, k, z, p As Long
+ Dim temp1, temp2, temp3, Collision, dx, dy, Step2 As Long
+ Dim id As Long
+ Dim DummyReturn
+ 
+ Dim F As Integer
+ Dim tmpstruct As genotype
+ 
+ Dim a(1 To 4) As Long
+ Dim Ax(1 To 4) As Long
+ Dim Ay(1 To 4) As Long
+    
+    id = CurrentPosNewPopulation
+
+    '/* Detect Previous Direction */
+    If (population(i).X(n) = population(i).X(n - 1)) Then
+                 p = population(i).Y(n - 1) - population(i).Y(n)
+                    If (p = 1) Then
+                                            PrevDirection = 3
+                    Else
+                                            PrevDirection = 4
+                    End If
+                
+     Else
+               p = population(i).X(n - 1) - population(i).X(n)
+                    If (p = 1) Then
+                                         PrevDirection = 1
+                    Else
+                                         PrevDirection = 2
+                    End If
+     End If
+
+
+         Select Case PrevDirection
+                     Case 1
+                           Ax(1) = -1
+                           Ay(1) = 0
+                           Ax(2) = 0
+                           Ay(2) = 1
+                           Ax(3) = 0
+                           Ay(3) = -1
+                     Case 2
+                           Ax(1) = 1
+                           Ay(1) = 0
+                           Ax(2) = 0
+                           Ay(2) = 1
+                           Ax(3) = 0
+                           Ay(3) = -1
+                     Case 3
+                           Ax(1) = 1
+                           Ay(1) = 0
+                           Ax(2) = -1
+                           Ay(2) = 0
+                           Ax(3) = 0
+                           Ay(3) = -1
+                     
+                     Case 4
+                           Ax(1) = 1
+                           Ay(1) = 0
+                           Ax(2) = -1
+                           Ay(2) = 0
+                           Ax(3) = 0
+                           Ay(3) = 1
+         End Select
+
+        temp1 = Int(Rnd * 3 + 1)
+
+        newpopulation(id).X(n + 1) = population(i).X(n) + Ax(temp1)
+        newpopulation(id).Y(n + 1) = population(i).Y(n) + Ay(temp1)
+        Collision = 0
+
+        dx = newpopulation(id).X(n + 1) - population(j).X(n + 1)
+        dy = newpopulation(id).Y(n + 1) - population(j).Y(n + 1)
+
+        For k = n + 1 To txtProteinLength
+                    newpopulation(id).X(k) = population(j).X(k) + dx
+                    
+                    newpopulation(id).Y(k) = population(j).Y(k) + dy
+
+                    For z = 1 To n
+                         If ((newpopulation(id).X(k) = population(i).X(z)) And (newpopulation(id).Y(k) = population(i).Y(z))) Then
+                                     Collision = 1
+                                      CrossoverInternalFailCount = CrossoverInternalFailCount + 1
+                                     'CrossoverCollisionCount = CrossoverCollisionCount + 1
+                                     GoTo MyOut1
+                         End If
+                    Next z
+        Next k
+
+MyOut1:
+            If (Collision = 1) Then         '/* ======> Second try ==== */
+              Collision = 0
+              Step2 = 6 - temp1
+              Select Case Step2
+                              Case 3
+                                  If Int(Rnd * 2 + 1) = 1 Then
+                                     temp2 = 1
+                                  Else
+                                      temp2 = 2
+                                  End If
+                                  
+                                 Case 4
+                                   If Int(Rnd * 2 + 1) = 1 Then
+                                      temp2 = 1
+                                   Else
+                                    temp2 = 3
+                                   End If
+                                     
+                                 Case 5
+                                    If Int(Rnd * 2 + 1) = 1 Then
+                                                temp2 = 2
+                                    Else
+                                                temp2 = 3
+                                    End If
+               End Select
+               
+                temp3 = 6 - (temp1 + temp2)
+                newpopulation(id).X(n + 1) = population(i).X(n) + Ax(temp2)
+                newpopulation(id).Y(n + 1) = population(i).Y(n) + Ay(temp2)
+                dx = newpopulation(id).X(n + 1) - population(j).X(n + 1)
+                dy = newpopulation(id).Y(n + 1) - population(j).Y(n + 1)
+
+                For k = n + 1 To txtProteinLength
+                    
+                    newpopulation(id).X(k) = population(j).X(k) + dx
+                    newpopulation(id).Y(k) = population(j).Y(k) + dy
+
+                    For z = 1 To n
+                           If ((newpopulation(id).X(k) = population(i).X(z)) And (newpopulation(id).Y(k) = population(i).Y(z))) Then
+                                Collision = 1
+                                'CrossoverCollisionCount = CrossoverCollisionCount + 1
+                                 CrossoverInternalFailCount = CrossoverInternalFailCount + 1
+                                GoTo MyOut2
+                           End If
+                     Next z
+                 Next k
+                 
+MyOut2:
+                 If (Collision = 1) Then
+                            Collision = 0
+                            newpopulation(id).X(n + 1) = population(i).X(n) + Ax(temp3)
+                            newpopulation(id).Y(n + 1) = population(i).Y(n) + Ay(temp3)
+                            dx = newpopulation(id).X(n + 1) - population(j).X(n + 1)
+                            dy = newpopulation(id).Y(n + 1) - population(j).Y(n + 1)
+                            For k = n + 1 To txtProteinLength
+                                    newpopulation(id).X(k) = population(j).X(k) + dx
+                                    newpopulation(id).Y(k) = population(j).Y(k) + dy
+                                    For z = 1 To n
+                                         If ((newpopulation(id).X(k) = population(i).X(z)) And (newpopulation(id).Y(k) = population(i).Y(z))) Then
+                                             Collision = 1
+                                             CrossoverInternalFailCount = CrossoverInternalFailCount + 1
+                                             'CrossoverCollisionCount = CrossoverCollisionCount + 1
+                                             GoTo MyOut3
+                                         End If
+                                    Next z
+                             Next k
+                         End If '/* 3rd try if ends */
+                 End If '/* 2nd try if ends */
+
+MyOut3:
+                 If Collision = 0 Then
+                   '   CrossoverSuccessCount = CrossoverSuccessCount + 1
+                      For k = 1 To n
+                               newpopulation(id).X(k) = population(i).X(k)
+                               newpopulation(id).Y(k) = population(i).Y(k)
+                     Next k
+                   
+                    CrossOver = 1
+                    
+             Else
+                    'CrossOver =0
+                    
+                    
+                    
+                    CrossoverFailCount = CrossoverFailCount + 1
+                   
+                    CrossOver = CalculateThePaths(i, n, id) ' if successful should return 1 else 0
+                    If CrossOver = 0 Then
+                           CrossoverFailCountafterDFS = CrossoverFailCountafterDFS + 1
+                    End If
+             End If
+
+End Function
+' *****************************************************************
+'//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+'***********************************************************************
+'   Construct a random Orientation for a Protein String for mth population
+'   Note:It will try for valid (self-avoid walk) until success
+
+Function RandomOrientation(m As Long)
+
+Dim PreviousDirection, PresentDirection As Long
+Dim i, temp1, temp2, temp3, X, Y, j, Flag, Step2 As Long
+Dim a(1 To 4) As Long
+Dim Ax(1 To 4) As Long
+Dim Ay(1 To 4) As Long
+    
+    '                                        3
+    '             Select Direction as:     2 X 1
+    '                                        4
+    '
+
+     ValidFolding = 1
+     population(m).X(1) = 0
+     population(m).Y(1) = 0
+     population(m).X(2) = 1
+     population(m).Y(2) = 0
+     PreviousDirection = 1
+
+
+     For i = 3 To txtProteinLength
+                
+                     Select Case PreviousDirection
+                                                     Case 1
+                                                          a(1) = 1
+                                                          Ax(1) = 1
+                                                          Ay(1) = 0
+                                                          a(2) = 3
+                                                          Ax(2) = 0
+                                                          Ay(2) = 1
+                                                          a(3) = 4
+                                                          Ax(3) = 0
+                                                          Ay(3) = -1
+                                                      Case 2
+                                                          a(1) = 2
+                                                          Ax(1) = -1
+                                                          Ay(1) = 0
+                                                          a(2) = 3
+                                                          Ax(2) = 0
+                                                          Ay(2) = 1
+                                                          a(3) = 4
+                                                          Ax(3) = 0
+                                                          Ay(3) = -1
+                                                      Case 3
+                                                          a(1) = 1
+                                                          Ax(1) = 1
+                                                          Ay(1) = 0
+                                                          a(2) = 2
+                                                          Ax(2) = -1
+                                                          Ay(2) = 0
+                                                          a(3) = 3
+                                                          Ax(3) = 0
+                                                          Ay(3) = 1
+                                                      Case 4
+                                                          a(1) = 1
+                                                          Ax(1) = 1
+                                                          Ay(1) = 0
+                                                          a(2) = 2
+                                                          Ax(2) = -1
+                                                          Ay(2) = 0
+                                                          a(3) = 4
+                                                          Ax(3) = 0
+                                                          Ay(3) = -1
+                       End Select
+
+                        temp1 = Int(3 * Rnd + 1)
+                        PresentDirection = temp1
+                        temp2 = 0
+                        temp3 = 0
+                        X = population(m).X(i - 1) + Ax(temp1)
+                        Y = population(m).Y(i - 1) + Ay(temp1)
+                        Flag = 0
+
+                        For j = 1 To i - 1
+                              If (X = population(m).X(j) And Y = population(m).Y(j)) Then
+                                  Flag = 1
+                                  GoTo MyJump1
+                              End If
+                        Next j
+
+MyJump1:
+                            If (Flag = 1) Then
+                                    Flag = 0
+                                    Step2 = 6 - temp1
+                                    Select Case Step2
+                                                  Case 3
+                                                    If Int(Rnd * 2 + 1) = 1 Then
+                                                          temp2 = 1
+                                                     Else
+                                                          temp2 = 2
+                                                     End If
+                                                  Case 4
+                                                     If Int(Rnd * 2 + 1) = 1 Then
+                                                        temp2 = 1
+                                                     Else
+                                                        temp2 = 3
+                                                     End If
+                                                  Case 5
+                                                     If Int(Rnd * 2 + 1) = 1 Then
+                                                         temp2 = 2
+                                                     Else
+                                                         temp2 = 3
+                                                     End If
+                                   End Select
+
+                                    PresentDirection = temp2
+                                    temp3 = 6 - (temp1 + temp2)
+                                    X = population(m).X(i - 1) + Ax(temp2)
+                                    Y = population(m).Y(i - 1) + Ay(temp2)
+
+                                     For j = 1 To i - 1
+                                              If (X = population(m).X(j) And Y = population(m).Y(j)) Then
+                                                 Flag = 1
+                                                 GoTo MyJump2
+                                              End If
+                                      Next j
+MyJump2:
+                                    If (Flag = 1) Then
+                                                            Flag = 0
+                                                            PresentDirection = temp3
+                                                            X = population(m).X(i - 1) + Ax(temp3)
+                                                            Y = population(m).Y(i - 1) + Ay(temp3)
+                                                            For j = 1 To i - 1
+                                                                      If (X = population(m).X(j) And Y = population(m).Y(j)) Then
+                                                                                    Flag = 1
+                                                                                    ValidFolding = 0
+                                                                                    'GoTo MyJump3
+                                                                                    
+                                                                      End If
+                                                            Next j
+                                         End If
+                                   End If
+                            PreviousDirection = a(PresentDirection)
+                            population(m).X(i) = population(m).X(i - 1) + Ax(PresentDirection)
+                            population(m).Y(i) = population(m).Y(i - 1) + Ay(PresentDirection)
+    Next i
+MyJump3:
+ 
+End Function
+'////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Function Mutation(i As Long, n As Integer) As Long
+    Dim id As Long
+    Dim a As Long
+    Dim b As Long
+    Dim A_Limit As Long
+    Dim choice As Long
+    Dim Collision As Long
+    Dim dx As Long
+    Dim dy As Long
+    Dim k As Long
+    Dim z As Long
+    Dim p As Long
+    Dim DummyReturn
+    
+    Dim Ary(1 To 3) As Long
+     
+     id = CurrentPosNewPopulation
+
+     ' possible rotations 90ß,180ß,270ß
+     '           index       1   2    3
+     '
+   
+     
+     Ary(1) = 1
+     Ary(2) = 2
+     Ary(3) = 3
+     A_Limit = 3
+      
+     a = population(i).X(n)          '/* (a, b) rotating point */
+     b = population(i).Y(n)
+     
+     Do
+                Collision = 0
+                 If (A_Limit > 1) Then
+                       choice = Int(A_Limit * Rnd + 1)
+                 Else
+                      choice = A_Limit
+                 End If
+                 
+
+                 p = Ary(choice)
+                 For k = choice To A_Limit - 1
+                    Ary(k) = Ary(k + 1)
+                 Next k
+                 
+                 A_Limit = A_Limit - 1
+
+                 For k = n + 1 To txtProteinLength
+                      Select Case p
+
+                                 Case 1
+                                       newpopulation(id).X(k) = a + b - population(i).Y(k)       '/* X' = (a+b)-Y  */
+                                       newpopulation(id).Y(k) = population(i).X(k) + b - a       '/* Y' = (X+b)-a  */
+                                 Case 2
+                                       newpopulation(id).X(k) = 2 * a - population(i).X(k)       '/* X' = (2a - X) */
+                                       newpopulation(id).Y(k) = 2 * b - population(i).Y(k)       '/* Y' = (2b-Y)   */
+                                 Case 3
+                                       newpopulation(id).X(k) = population(i).Y(k) + a - b       '/* X' =  Y+a-b   */
+                                       newpopulation(id).Y(k) = a + b - population(i).X(k)       '/* Y' =  (a+b)-X */
+                      End Select
+                             
+                     For z = 1 To n
+                         
+                                If ((newpopulation(id).X(k) = population(i).X(z)) And (newpopulation(id).Y(k) = population(i).Y(z))) Then
+                                        Collision = 1
+                                        MutationInternalFailCount = MutationInternalFailCount + 1
+                                        'MutationCollisionCount = MutationCollisionCount + 1
+                                        GoTo MyJump
+                                End If
+                     Next z
+                 Next k
+                 
+                If (Collision = 0) Then
+                        A_Limit = 0
+                 End If
+MyJump:
+        Loop Until A_Limit = 0
+
+        If (Collision = 0) Then
+        
+             For k = 1 To n
+                 newpopulation(id).X(k) = population(i).X(k)
+                 newpopulation(id).Y(k) = population(i).Y(k)
+             Next k
+                                
+                 
+                 Mutation = 1
+        Else
+                 MutationFailCount = MutationFailCount + 1
+                 Mutation = 0
+        End If
+
+End Function
+'//////////////////////////////////////////////////////////////////////////////////////////
+Function DrawTheBestFolding(i As Long)
+    Dim dx As Long
+    Dim dy As Long
+    Dim dx1 As Long
+    Dim dy1 As Long
+    Dim dx2 As Long
+    Dim dy2 As Long
+   
+    
+    Dim massx As Double
+    Dim massy As Double
+    Dim Area As Double
+    
+    
+            
+    Dim GraphUnit As Long
+    Dim SmallLength As Long
+    Dim k As Long
+    
+    Picture2.Cls
+    
+    dx = Picture2.Width / 2
+    dy = Picture2.Height / 2
+    
+    SmallLength = Picture2.Width
+    
+    If SmallLength > Picture2.Height Then
+        SmallLength = Picture2.Height
+    End If
+    
+    SmallLength = (SmallLength - 100) '/ 2
+    GraphUnit = SmallLength / txtProteinLength
+    
+    GraphUnit = GraphUnit + 100
+    
+    
+    lblFitness1 = "Fitness = " + Str(BestCollection(i).Fitness) + "/" + Str(txtTargetValue)
+    
+    
+    If (HPModelAll(1) <> 0) Then
+      Picture2.Circle (dx, dy), 70, vbRed
+    Else
+      Picture2.Circle (dx, dy), 70, vbGreen
+    End If
+        
+    dx1 = dx
+    dy1 = dy
+        
+    For k = 2 To txtProteinLength
+        dx2 = BestCollection(i).X(k) * GraphUnit + dx
+        dy2 = BestCollection(i).Y(k) * GraphUnit + dy
+        If (HPModelAll(k) <> 0) Then
+               Picture2.Circle (dx2, dy2), 50, vbRed
+        Else
+                Picture2.Circle (dx2, dy2), 50, vbGreen
+        End If
+        
+        Picture2.Line (dx1, dy1)-(dx2, dy2), vbBlack
+        
+        dx1 = dx2
+        dy1 = dy2
+    
+    Next k
+
+' Draw the Centre of mass
+ massx = 0
+ massy = 0
+ For k = 1 To txtHCount
+    
+        massx = massx + BestCollection(i).X(HPModel(k))
+        massy = massy + BestCollection(i).Y(HPModel(k))
+           
+ Next k
+ massx = massx / (txtHCount)
+ massy = massy / (txtHCount)
+
+Picture2.Circle (massx * GraphUnit + dx, massy * GraphUnit + dy), 10, vbBlue
+
+End Function
