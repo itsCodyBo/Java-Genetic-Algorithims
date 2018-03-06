@@ -11,9 +11,14 @@ public class ProteinFolderRunner {
 
 		myProteinFolder.RandomOrientation();
 
-		myProteinFolder.printArray();
+		//myProteinFolder.printArray();
 		
-		
+		//myProteinFolder.printAsXY();
+
+		myProteinFolder.sortArray();
+
+		myProteinFolder.printFitness();
+
 	}//end main
 
 
