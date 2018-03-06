@@ -275,7 +275,7 @@ End Function
 '   Construct a random Orientation for a Protein String for mth population
 '   Note:It will try for valid (self-avoid walk) until success
 
-Function RandomOrientation(m As Long)
+Function tation(m As Long)
 
 Dim PreviousDirection, PresentDirection As Long
 Dim i, temp1, temp2, temp3, X, Y, j, Flag, Step2 As Long

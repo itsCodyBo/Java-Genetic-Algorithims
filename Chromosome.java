@@ -36,295 +36,204 @@ public class Chromosome {
 		return x.length;
 	}
 
-
 	public void RandomOrientation(){
-
-		//for every new chromosome, set the first two values as 0,0 and 0,1
-		this.setX(1,1);
-		this.setY(1,0);
-
-		//start out as previous direction being 1
-		int previousDirection = 1;
-		int tempDirection = 1;
-
-		//used to choose a new path
-		Random rn = new Random();
-
-
-		int currentX=1;
-		int currentY=0;
-
-		//for each row
-		for (int i=2;i<this.getLength();i++){
-			
-			//xy variables
-			int tempX=0;
-			int tempY=0;
-
-
-			int firstChoice = rn.nextInt(3)+1;
-			int secondChoice = 6 - firstChoice;
-			int thirdChoice = 6 - firstChoice - secondChoice;
-
-			//previous direction = 1
-			if(previousDirection == 1){
-				if(firstChoice==1){
-					tempX += 1;
-					tempDirection = 1;
-				}//end if
-				if(firstChoice == 2){
-					tempY += -1;
-					tempDirection = 2;
-				}
-				if(firstChoice == 3){
-					tempY += 1;
-					tempDirection = 4;
-				}
-			}
-
-			//previous direction = 2
-			if(previousDirection == 2){
-				if(firstChoice==1){
-					tempX += 1;
-					tempDirection = 1;
-				}//end if
-				if(firstChoice == 2){
-					tempY += -1;
-					tempDirection = 2;
-				}
-				if(firstChoice == 3){
-					tempX += -1;
-					tempDirection = 3;
-				}
-			}//end first if
-	
-			//previous direction = 3
-			if(previousDirection == 3){
-				if(firstChoice==1){
-					tempY += 1;
-					tempDirection = 4;
-				}
-				if(firstChoice == 2){
-					tempY += -1;
-					tempDirection = 2;
-				}
-				if(firstChoice == 3){
-					tempX += -1;
-					tempDirection = 3;
-				}
-			}//end first if
-
-			//previous direction = 4
-			if(previousDirection == 4){
-				if(firstChoice==1){
-					tempX += 1;
-					tempDirection = 1;
-				}
-				if(firstChoice == 2){
-					tempY += 1;
-					tempDirection = 4;
-				}
-				if(firstChoice == 3){
-					tempX += -1;
-					tempDirection = 3;
-				}
-			}
-
-			
-			//first check for duplicate
-			for (int k=0;k<i-1;k++){
-
-				if (currentX + tempX == this.getX(k) && currentY + tempY == this.getY(k)){
-					tempX = 0;
-					tempY = 0;
-
-					//previous direction = 1
-					if(previousDirection == 1){
-						if(secondChoice==1){
-							tempX += 1;
-							tempDirection = 1;
-						}//end if
-						if(secondChoice == 2){
-							tempY += -1;
-							tempDirection = 2;
-						}
-						if(secondChoice == 3){
-							tempY += 1;
-							tempDirection = 4;
-						}
-					}
-
-					//previous direction = 2
-					if(previousDirection == 2){
-						if(secondChoice==1){
-							tempX += 1;
-							tempDirection = 1;
-						}//end if
-						if(secondChoice == 2){
-							tempY += -1;
-							tempDirection = 2;
-						}
-						if(secondChoice == 3){
-							tempX += -1;
-							tempDirection = 3;
-						}
-					}
-		
-					//previous direction = 3
-					if(previousDirection == 3){
-						if(secondChoice==1){
-							tempY += 1;
-							tempDirection = 4;
-						}//end if
-						if(secondChoice == 2){
-							tempY += -1;
-							tempDirection = 2;
-						}
-						if(secondChoice == 3){
-							tempX += -1;
-							tempDirection = 3;
-						}
-					}
-
-					//previous direction = 4
-					if(previousDirection == 4){
-						if(secondChoice==1){
-							tempX += 1;
-							tempDirection = 1;
-						}//end if
-						if(secondChoice == 2){
-							tempY += 1;
-							tempDirection = 4;
-						}
-						if(secondChoice == 3){
-							tempX += -1;
-							tempDirection = 3;
-						}
-					}
-
-				}//test for dup
-
-			}//end for k
-			
-
-			
-			//final check for duplicate
-			for (int l=0;l<i-1;l++){
-				if (currentX + tempX == this.getX(l) && currentY + tempY == this.getY(l)){
-
-					tempX = 0;
-					tempY = 0;
-
-					//previous direction = 1
-					if(previousDirection == 1){
-						if(thirdChoice==1){
-							tempX += 1;
-							tempDirection = 1;
-						}//end if
-						if(thirdChoice == 2){
-							tempY += -1;
-							tempDirection = 2;
-						}
-						if(thirdChoice == 3){
-							tempY += 1;
-							tempDirection = 4;
-						}
-					}
-
-					//previous direction = 2
-					if(previousDirection == 2){
-						if(thirdChoice==1){
-							tempX += 1;
-							tempDirection = 1;
-						}//end if
-						if(thirdChoice == 2){
-							tempY += -1;
-							tempDirection = 2;
-						}
-						if(thirdChoice == 3){
-							tempX += -1;
-							tempDirection = 3;
-						}
-					}
-		
-					//previous direction = 3
-					if(previousDirection == 3){
-						if(thirdChoice==1){
-							tempY += 1;
-							tempDirection = 4;
-						}//end if
-						if(thirdChoice == 2){
-							tempY += -1;
-							tempDirection = 2;
-						}
-						if(thirdChoice == 3){
-							tempX += -1;
-							tempDirection = 3;
-						}
-					}
-
-					//previous direction = 4
-					if(previousDirection == 4){
-						if(thirdChoice==1){
-							tempX += 1;
-							tempDirection = 1;
-						}//end if
-						if(thirdChoice == 2){
-							tempY += 1;
-							tempDirection = 4;
-						}
-						if(thirdChoice == 3){
-							tempX += -1;
-							tempDirection = 3;
-						}
-					}
-
-				}//last test for dup
-
-			}//end for l
-			
-			
-			currentX = currentX +  tempX;
-			currentY = currentY + tempY;
-			previousDirection = tempDirection;
-			this.setX(i,currentX);
-			this.setY(i,currentY);
-
-		}//end for i
-
-	}//end random orientation
-
-	public void produceValid(){
-
 		boolean valid = false;
 
-		while (valid != true){
+		while (valid != true) {
+			valid = true;
+			//for every new chromosome, set the first two values as 0,0 and 0,1
+			this.setX(1,1);
+			this.setY(1,0);
 
-			this.RandomOrientation();
 
-			for (int i=0;i<this.getLength();i++){
+			//used to choose a new path
+			Random rn = new Random();
 
-				int currentX = this.getX(i);
-				int currentY = this.getY(i);
-			
-				for (int j=1;j<this.getLength()-1;j++) {
+			int currentX=1;
+			int currentY=0;
 
-					int xToCompare = this.getX(j);
-					int yToCompare = this.getY(j);
+			int previousDirection = 1;
 
-					if (currentX==xToCompare && currentY == yToCompare){
-						continue;
+			//for each row
+			for (int i=2;i<getLength();i++){
+
+				int tempX=0;
+				int tempY=0;
+
+				//previousDirection = 1;
+				int firstChoice = rn.nextInt(3)+1;
+				int secondChoice = 6 - firstChoice;
+				int thirdChoice = 6 - firstChoice - secondChoice;
+				int count = 0;
+				int original = previousDirection;
+				int choice = firstChoice;
+
+				if (count == 0) {
+					choice = firstChoice;
+				}
+				if (count == 1){
+					tempX = 0;
+					tempY = 0;
+					previousDirection = original;
+					choice = secondChoice;
+				}
+				if (count == 2) {
+					tempX = 0;
+					tempY = 0;
+					previousDirection = original;
+					choice = thirdChoice;
+				}
+
+				//first choice no while loop
+				if (previousDirection == 1){	
+					if (choice == 1) {
+						tempX += 1;
+						previousDirection = 1;
 					}
-					else {
-						valid = true;
+					else if (choice==2){
+						tempY += -1;
+						previousDirection = 2;
 					}
-				}//end for inner
+					else if(choice == 3) {
+						tempY += 1;
+						previousDirection = 4;
+					}
+				}//end first if
 
-			}//end for outer
+				else if (previousDirection == 2) {
+					if(choice == 1){
+						tempX += -1;
+						previousDirection = 3;
+					}
+					else if(choice == 2){
+						tempX+= 1;
+						previousDirection = 1;
+					}
+					else if(choice == 3){
+						tempY += -1;
+						previousDirection = 2;
+					}
+				}
+
+				else if (previousDirection ==3 ) {
+					if (choice == 1){
+						tempX += -1;
+					}
+					else if(choice == 2){
+						tempY += -1;
+						previousDirection = 2;
+					}
+					else if (choice == 3){
+						tempY += 1;
+						previousDirection = 4;
+					}
+				}
+
+				else if (previousDirection == 4) {
+					if(choice==1){
+						tempX += 1;
+						previousDirection = 1;
+					}
+					else if (choice==2){
+						tempX += -1;
+						previousDirection = 3;
+					}
+					else if (choice == 3){
+						tempY += 1;
+						previousDirection = 4;
+					}
+				}
+				else {
+					//System.out.println("ERROR PICKING");
+				}
+
+				/*
+				//first check for duplicate
+				for (int j=i+1;j<i-1;j++){
+					if (currentX + tempX == this.getX(j) && currentY + tempY == this.getY(j)){
+						//System.out.println("FOUND CONFLICTING POINTS!");
+						valid = false;
+					}
+				}//end for		
+				*/
+
+
+				currentX += tempX;
+				currentY += tempY;
+
+				this.setX(i,currentX);
+				this.setY(i,currentY);
+
+
+			}//end for i
+
+			if (this.duplicateCheck()>0){
+				valid = false;
+			}
 
 		}//end while
 
-	}//end produce valid
+	}//end random orientation
+
+	//a method to check for duplicates and return a count
+	public int duplicateCheck(){
+		
+		int count =0;
+
+		for (int i=0;i<this.getLength()-1;i++){
+			int currentX = this.getX(i);
+			int currentY = this.getY(i);
+
+			for (int j=i+1;j<this.getLength()-2;j++){
+
+				int xToCompare = this.getX(j);
+				int yToCompare = this.getY(j);
+
+				if (currentX==xToCompare && currentY ==yToCompare){
+					count++;
+				}
+			}//end for j
+		
+		}//end for i
+		
+		return count;
+
+	}
+
+	//a method to check for duplicates and return a count
+	public int computeFitness(){
+		
+		int count =0;
+
+		for (int i=0;i<this.getLength();i++){
+			int currentX = this.getX(i);
+			int currentY = this.getY(i);
+
+			for (int j=i+2;j<this.getLength()-2;j++){
+
+				int xToCompare = this.getX(j);
+				int yToCompare = this.getY(j);
+
+				if (currentX==xToCompare+1 && currentY ==yToCompare){
+					count++;
+				}
+				if (currentX==xToCompare-1 && currentY ==yToCompare){
+					count++;
+				}
+				if (currentX==xToCompare && currentY ==yToCompare+1){
+					count++;
+				}
+				if (currentX==xToCompare+1 && currentY ==yToCompare-1){
+					count++;
+				}
+
+			}//end for j
+		
+		}//end for i
+		
+		return count;
+
+	}
 
 
 }//end Chromosome

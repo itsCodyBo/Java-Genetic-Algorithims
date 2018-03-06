@@ -13,6 +13,7 @@ public class ProteinFolderRunner {
 
 		myProteinFolder.printArray();
 		
+		
 	}//end main
 
 

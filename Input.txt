@@ -27,9 +27,3 @@ Seq = hhhhhhhhhhhhphphhhhhhhhhhhhhhhhphphhhhhhhhhhhh
 Fitness = -42
 Seq = hhhhhhhhhhhhphphpphhpphhpphpphhpphhpphpphhpphhpphphphhhhhhhhhhhh
 Fitness = -42
-
-
-
-
-
-
